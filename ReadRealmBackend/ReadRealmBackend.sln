@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadRealmBackend.Models", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadRealmBackend.Common", "..\ReadRealmBackend.Common\ReadRealmBackend.Common.csproj", "{E6BDEDFE-F526-4BF4-9A3F-A46E21879597}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadRealmBackend.Initializer", "..\Initializer\ReadRealmBackend.Initializer.csproj", "{D3A48E93-1D4F-4B5D-9DE1-29810FBAD145}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadRealmBackend.Initializer", "..\ReadRealmBackend.Initializer\ReadRealmBackend.Initializer.csproj", "{D3A48E93-1D4F-4B5D-9DE1-29810FBAD145}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

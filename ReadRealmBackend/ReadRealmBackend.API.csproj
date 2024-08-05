@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Initializer\ReadRealmBackend.Initializer.csproj" />
     <ProjectReference Include="..\ReadRealmBackend.BL\ReadRealmBackend.BL.csproj" />
     <ProjectReference Include="..\ReadRealmBackend.Common\ReadRealmBackend.Common.csproj" />
+    <ProjectReference Include="..\ReadRealmBackend.Initializer\ReadRealmBackend.Initializer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
