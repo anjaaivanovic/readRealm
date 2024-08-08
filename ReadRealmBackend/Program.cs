@@ -16,13 +16,15 @@ builder.Services.AddSwaggerGen();
 var serviceInitializer = new ServiceInitializer();
 serviceInitializer.Initialize(builder.Services);
 
+ConfigProvider.Initialize(builder.Configuration);
+
 #region Cors
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policyBuilder =>
     {
-        var allowedOrigins = builder.Configuration["Cors:AllowedOrigins"].Split(',');
+        var allowedOrigins = ConfigProvider.AllowedOrigins.Split(',');
         policyBuilder.WithOrigins(allowedOrigins)
                      .AllowAnyHeader()
                      .AllowAnyMethod();
@@ -42,9 +44,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            ValidIssuer = ConfigProvider.Issuer,
+            ValidAudience = ConfigProvider.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(ConfigProvider.JwtKey))
         };
     });
 

@@ -56,14 +56,15 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_BookId");
 
-            entity.Property(e => e.CoverImage)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(1000)
                 .IsUnicode(false);
-            entity.Property(e => e.Isbn).HasColumnName("ISBN");
+            entity.Property(e => e.Isbn)
+                .IsRequired()
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ISBN");
             entity.Property(e => e.Title)
                 .IsRequired()
                 .HasMaxLength(200)

@@ -24,9 +24,8 @@ BEGIN
 		Published DATE NOT NULL,
 		[Description] VARCHAR(1000) NOT NULL,
 		ChapterCount INT NOT NULL,
-		[PageCount] INT NOT NULL,
-		CoverImage VARCHAR(50) NULL,
-		ISBN INT NOT NULL,
+		[WordCount] INT NOT NULL,
+		ISBN VARCHAR(20) NOT NULL,
 		TypeId INT,
 		CONSTRAINT PK_BookId PRIMARY KEY (Id),
 		CONSTRAINT FK_Book_BookTypeId FOREIGN KEY (TypeId) REFERENCES BookTypes(Id)

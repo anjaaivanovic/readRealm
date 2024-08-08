@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using ReadRealmBackend.Models.Context;
 
-namespace ReadRealmBackend.DAL.BaseDAL
+namespace ReadRealmBackend.DAL.Base
 {
     public class BaseDAL<TEntity> : IBaseDAL<TEntity> where TEntity : class
     {
         private readonly ReadRealmContext _context;
-        private readonly DbSet<TEntity> _set;
+        public readonly DbSet<TEntity> _set;
 
         public BaseDAL(ReadRealmContext context)
         {

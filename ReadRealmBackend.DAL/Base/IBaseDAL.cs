@@ -1,4 +1,4 @@
-﻿namespace ReadRealmBackend.DAL.BaseDAL
+﻿namespace ReadRealmBackend.DAL.Base
 {
     public interface IBaseDAL<TEntity>
     {

@@ -4,13 +4,8 @@ namespace ReadRealmBackend.Common
 {
     public class JwtHelper
     {
-        private readonly string _secretKey;
-        private readonly ConfigProvider _configProvider;
-
-        public JwtHelper(ConfigProvider configProvider)
+        public JwtHelper()
         {
-            _configProvider = configProvider;
-            _secretKey = configProvider.JwtKey;
         }
 
         public string GetUserIdFromToken(string token)

@@ -17,11 +17,9 @@ public partial class Book
 
     public int ChapterCount { get; set; }
 
-    public int PageCount { get; set; }
+    public int WordCount { get; set; }
 
-    public string CoverImage { get; set; }
-
-    public int Isbn { get; set; }
+    public string Isbn { get; set; }
 
     public int? TypeId { get; set; }
 
