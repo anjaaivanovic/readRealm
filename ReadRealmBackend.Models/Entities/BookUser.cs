@@ -15,7 +15,7 @@ public partial class BookUser
 
     public DateOnly StartDate { get; set; }
 
-    public DateOnly EndDate { get; set; }
+    public DateOnly? EndDate { get; set; }
 
     public decimal? Rating { get; set; }
 

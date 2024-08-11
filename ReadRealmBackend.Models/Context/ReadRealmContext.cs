@@ -42,6 +42,8 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_Author_Id");
 
+            entity.HasIndex(e => new { e.FirstName, e.LastName }, "Author_Unique").IsUnique();
+
             entity.Property(e => e.FirstName)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -130,6 +132,8 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_BookType_Id");
 
+            entity.HasIndex(e => e.Name, "BookType_Unique").IsUnique();
+
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -166,6 +170,8 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_GenreId");
 
+            entity.HasIndex(e => e.Name, "Genre_Unique").IsUnique();
+
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -175,6 +181,8 @@ public partial class ReadRealmContext : DbContext
         modelBuilder.Entity<Language>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Language_Id");
+
+            entity.HasIndex(e => e.Name, "Language_Unique").IsUnique();
 
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -205,6 +213,8 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_NoteType_Id");
 
+            entity.HasIndex(e => e.Name, "NoteType_Unique").IsUnique();
+
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -214,6 +224,8 @@ public partial class ReadRealmContext : DbContext
         modelBuilder.Entity<Status>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Status_Id");
+
+            entity.HasIndex(e => e.Name, "Status_Unique").IsUnique();
 
             entity.Property(e => e.Name)
                 .IsRequired()

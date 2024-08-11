@@ -5,7 +5,6 @@ IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' A
 BEGIN
 	IF EXISTS(SELECT 1 FROM sys.columns WHERE Name = N'EndDate' AND Object_ID = Object_ID(N'BookUsers') AND is_nullable=0)
 	BEGIN  
-		PRINT('aaa')
 		ALTER TABLE BookUsers
 		ALTER COLUMN EndDate DATE NULL
 	END

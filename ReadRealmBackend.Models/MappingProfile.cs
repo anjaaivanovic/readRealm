@@ -1,7 +1,19 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.Models.Entities;
+using ReadRealmBackend.Models.Requests.Authors;
+using ReadRealmBackend.Models.Requests.BookTypes;
+using ReadRealmBackend.Models.Requests.Genres;
+using ReadRealmBackend.Models.Requests.Languages;
+using ReadRealmBackend.Models.Requests.NoteTypes;
+using ReadRealmBackend.Models.Requests.Statuses;
+using ReadRealmBackend.Models.Responses.Authors;
 using ReadRealmBackend.Models.Responses.Books;
+using ReadRealmBackend.Models.Responses.BookTypes;
+using ReadRealmBackend.Models.Responses.Genres;
+using ReadRealmBackend.Models.Responses.Languages;
 using ReadRealmBackend.Models.Responses.Notes;
+using ReadRealmBackend.Models.Responses.NoteTypes;
+using ReadRealmBackend.Models.Responses.Statuses;
 
 namespace ReadRealmBackend.Common
 {
@@ -16,6 +28,31 @@ namespace ReadRealmBackend.Common
                 .ReverseMap();
 
             CreateMap<Note, NoteResponse>().ReverseMap();
+
+            CreateMap<Author, InsertAuthorRequest>().ReverseMap();
+            CreateMap<Author, UpdateAuthorRequest>().ReverseMap();
+            CreateMap<Author, AuthorResponse>().ReverseMap();
+
+            CreateMap<BookType, InsertBookTypeRequest>().ReverseMap();
+            CreateMap<BookType, UpdateBookTypeRequest>().ReverseMap();
+            CreateMap<BookType, BookTypeResponse>().ReverseMap();
+
+            CreateMap<Genre, InsertGenreRequest>().ReverseMap();
+            CreateMap<Genre, UpdateGenreRequest>().ReverseMap();
+            CreateMap<Genre, GenreResponse>().ReverseMap();
+
+            CreateMap<Language, InsertLanguageRequest>().ReverseMap();
+            CreateMap<Language, UpdateLanguageRequest>().ReverseMap();
+            CreateMap<Language, LanguageResponse>().ReverseMap();
+
+            CreateMap<NoteType, InsertNoteTypeRequest>().ReverseMap();
+            CreateMap<NoteType, UpdateNoteTypeRequest>().ReverseMap();
+            CreateMap<NoteType, NoteTypeResponse>().ReverseMap();
+
+            CreateMap<Status, InsertStatusRequest>().ReverseMap();
+            CreateMap<Status, UpdateStatusRequest>().ReverseMap();
+            CreateMap<Status, StatusResponse>().ReverseMap();
+
         }
     }
 }

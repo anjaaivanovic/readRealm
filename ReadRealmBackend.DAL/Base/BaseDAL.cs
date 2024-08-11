@@ -31,6 +31,11 @@ namespace ReadRealmBackend.DAL.Base
             return await _set.FindAsync(id);
         }
 
+        public async Task<List<TEntity>> GetAllAsync()
+        {
+            return await _set.ToListAsync();
+        }
+
         #endregion
 
         #region Insert
