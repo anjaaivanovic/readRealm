@@ -22,7 +22,7 @@ namespace ReadRealmBackend.Common
         public MappingProfile()
         {
             CreateMap<Book, BookResponse>()
-                 .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName).ToList()))
+                 .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
                 .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.Languages.Select(l => l.Name).ToList()))
                 .ReverseMap();
@@ -53,6 +53,16 @@ namespace ReadRealmBackend.Common
             CreateMap<Status, UpdateStatusRequest>().ReverseMap();
             CreateMap<Status, StatusResponse>().ReverseMap();
 
+            CreateMap<Book, ContinueReadingBookResponse>()
+                .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
+                .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
+                .ForMember(dest => dest.CurrentChapter, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().CurrentChapter))
+                .ForMember(dest => dest.StartedOn, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().StartDate))
+                .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().Rating))
+                .ForMember(dest => dest.TotalChapters, opt => opt.MapFrom(src => src.ChapterCount))
+                .ReverseMap();
+            CreateMap<Book, RecommendedBookResponse>().ReverseMap();
+            CreateMap<Book, RecommendedBookByFriendsActivityResponse>().ReverseMap();
         }
     }
 }

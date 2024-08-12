@@ -1,5 +1,8 @@
-﻿using ReadRealmBackend.DAL.BookUsers;
+﻿using AutoMapper;
+using ReadRealmBackend.DAL.Books;
+using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.Models;
+using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Responses.Books;
 using ReadRealmBackend.Models.Responses.Home;
 
@@ -8,10 +11,14 @@ namespace ReadRealmBackend.BL.Home
     public class HomeBL : IHomeBL
     {
         private readonly IBookUserDAL _bookUserDAL;
+        private readonly IBookDAL _bookDAL;
+        private readonly IMapper _mapper;
 
-        public HomeBL(IBookUserDAL bookUserDAL)
+        public HomeBL(IBookUserDAL bookUserDAL, IMapper mapper, IBookDAL bookDAL)
         {
             _bookUserDAL = bookUserDAL;
+            _mapper = mapper;
+            _bookDAL = bookDAL;
         }
 
         public async Task<GenericResponse<HomeStats>> GetStats(int userId)
@@ -29,9 +36,15 @@ namespace ReadRealmBackend.BL.Home
             };
         }
 
-        public Task<GenericResponse<List<ContinueReadingBookResponse>>> GetContinueReadingBooksAsync(int userId)
+        public async Task<GenericResponse<List<ContinueReadingBookResponse>>> GetContinueReadingBooksAsync(int userId)
         {
-            throw new NotImplementedException();
+            var resp = await _bookDAL.GetContinueReadingBooksAsync(userId);
+
+            return new GenericResponse<List<ContinueReadingBookResponse>>
+            {
+                Success = true,
+                Data = _mapper.Map<List<Book>, List<ContinueReadingBookResponse>>(resp)
+            };
         }
 
         public Task<GenericResponse<List<RecommendedBookByFriendsActivityResponse>>> GetRecommendedBookByFriendsActivityAsync(int userId)

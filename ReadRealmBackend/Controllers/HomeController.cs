@@ -20,5 +20,11 @@ namespace ReadRealmBackend.API.Controllers
         {
             return Ok(await _homeBL.GetStats(userId));
         }
+
+        [HttpGet("continueReading")]
+        public async Task<IActionResult> GetContinueReadingBooksAsync(int userId)
+        {
+            return Ok(await _homeBL.GetContinueReadingBooksAsync(userId));
+        }
     }
 }
