@@ -4,12 +4,15 @@ using ReadRealmBackend.BL.Authors;
 using ReadRealmBackend.BL.Books;
 using ReadRealmBackend.BL.BookTypes;
 using ReadRealmBackend.BL.Genres;
+using ReadRealmBackend.BL.Home;
 using ReadRealmBackend.BL.Languages;
 using ReadRealmBackend.BL.NoteTypes;
 using ReadRealmBackend.BL.Statuses;
+using ReadRealmBackend.Common.Services;
 using ReadRealmBackend.DAL.Authors;
 using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookTypes;
+using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.DAL.Genres;
 using ReadRealmBackend.DAL.Languages;
 using ReadRealmBackend.DAL.NoteTypes;
@@ -39,6 +42,7 @@ namespace ReadRealmBackend.Common
             services.AddScoped<ILanguageDAL, LanguageDAL>();
             services.AddScoped<INoteTypeDAL, NoteTypeDAL>();
             services.AddScoped<IStatusDAL, StatusDAL>();
+            services.AddScoped<IBookUserDAL, BookUserDAL>();
         }
 
         public void InitializeBL(IServiceCollection services)
@@ -50,11 +54,11 @@ namespace ReadRealmBackend.Common
             services.AddScoped<ILanguageBL, LanguageBL>();
             services.AddScoped<INoteTypeBL, NoteTypeBL>();
             services.AddScoped<IStatusBL, StatusBL>();
+            services.AddScoped<IHomeBL, HomeBL>();
         }
 
         public void InitializeOther(IServiceCollection services)
         {
-            services.AddSingleton<JwtHelper>();
             services.AddAutoMapper(typeof(MappingProfile));
         }
     }

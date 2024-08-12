@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace ReadRealmBackend.Common
+namespace ReadRealmBackend.Common.Services
 {
     public static class ConfigProvider
     {
@@ -19,7 +19,6 @@ namespace ReadRealmBackend.Common
             Issuer = configuration.GetSection("Jwt:Issuer").Value ?? string.Empty;
             Audience = configuration.GetSection("Jwt:Audience").Value ?? string.Empty;
             AllowedOrigins = configuration.GetSection("Cors:AllowedOrigins").Value ?? string.Empty;
-            
         }
     }
 }

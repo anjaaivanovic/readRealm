@@ -6,8 +6,8 @@ namespace ReadRealmBackend.DAL.Base
 {
     public class BaseDAL<TEntity> : IBaseDAL<TEntity> where TEntity : class
     {
-        private readonly ReadRealmContext _context;
-        public readonly DbSet<TEntity> _set;
+        private protected readonly ReadRealmContext _context;
+        private protected readonly DbSet<TEntity> _set;
 
         public BaseDAL(ReadRealmContext context)
         {
