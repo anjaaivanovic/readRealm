@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReadRealmBackend.Common.Constants;
 using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Context;
 using ReadRealmBackend.Models.Entities;
@@ -38,7 +39,7 @@ namespace ReadRealmBackend.DAL.BookUsers
 
         public async Task<int> TotalBooksReadAsync(int userId)
         {
-            var readStatus = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == "Read");
+            var readStatus = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadStatus);
             return await _set.Where(bu => bu.UserId == userId && bu.StatusId == readStatus.Id).CountAsync();
         }
 

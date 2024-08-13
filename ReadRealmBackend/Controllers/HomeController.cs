@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ReadRealmBackend.BL.Authors;
 using ReadRealmBackend.BL.Home;
 
 namespace ReadRealmBackend.API.Controllers
@@ -25,6 +24,18 @@ namespace ReadRealmBackend.API.Controllers
         public async Task<IActionResult> GetContinueReadingBooksAsync(int userId)
         {
             return Ok(await _homeBL.GetContinueReadingBooksAsync(userId));
+        }
+
+        [HttpGet("friendsReading")]
+        public async Task<IActionResult> GetRecommendedBookByFriendsActivityAsync(int userId)
+        {
+            return Ok(await _homeBL.GetRecommendedBookByFriendsActivityAsync(userId));
+        }
+
+        [HttpGet("recommended")]
+        public async Task<IActionResult> GetRecommendedBookByGenresAsync(int userId)
+        {
+            return Ok(await _homeBL.GetRecommendedBookByGenresAsync(userId));
         }
     }
 }

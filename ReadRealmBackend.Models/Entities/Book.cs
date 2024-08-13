@@ -23,6 +23,8 @@ public partial class Book
 
     public int? TypeId { get; set; }
 
+    public string BriefDescription { get; set; }
+
     public virtual ICollection<BookUser> BookUsers { get; set; } = new List<BookUser>();
 
     public virtual ICollection<Note> Notes { get; set; } = new List<Note>();

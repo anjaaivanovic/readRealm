@@ -58,6 +58,10 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK_BookId");
 
+            entity.Property(e => e.BriefDescription)
+                .IsRequired()
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(1000)

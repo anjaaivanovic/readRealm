@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookUsers;
+using ReadRealmBackend.DAL.Friends;
 using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Responses.Books;
@@ -12,13 +13,15 @@ namespace ReadRealmBackend.BL.Home
     {
         private readonly IBookUserDAL _bookUserDAL;
         private readonly IBookDAL _bookDAL;
+        private readonly IFriendDAL _friendDAL;
         private readonly IMapper _mapper;
 
-        public HomeBL(IBookUserDAL bookUserDAL, IMapper mapper, IBookDAL bookDAL)
+        public HomeBL(IBookUserDAL bookUserDAL, IMapper mapper, IBookDAL bookDAL, IFriendDAL friendDAL)
         {
             _bookUserDAL = bookUserDAL;
             _mapper = mapper;
             _bookDAL = bookDAL;
+            _friendDAL = friendDAL;
         }
 
         public async Task<GenericResponse<HomeStats>> GetStats(int userId)
@@ -47,14 +50,44 @@ namespace ReadRealmBackend.BL.Home
             };
         }
 
-        public Task<GenericResponse<List<RecommendedBookByFriendsActivityResponse>>> GetRecommendedBookByFriendsActivityAsync(int userId)
+        public async Task<GenericResponse<List<RecommendedBookByFriendsActivityResponse>>> GetRecommendedBookByFriendsActivityAsync(int userId)
         {
-            throw new NotImplementedException();
+            if (!await _friendDAL.CheckFriendsAsync(userId))
+            {
+                return new GenericResponse<List<RecommendedBookByFriendsActivityResponse>>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No friends yet! :(" }
+                };
+            }
+
+            var resp = await _bookDAL.GetRecommendedBooksByFriendsActivityAsync(userId);
+
+            if (resp.Count == 0)
+            {
+                return new GenericResponse<List<RecommendedBookByFriendsActivityResponse>>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No friend activity!" }
+                };
+            }
+
+            return new GenericResponse<List<RecommendedBookByFriendsActivityResponse>>
+            {
+                Success = true,
+                Data = _mapper.Map<List<Book>, List<RecommendedBookByFriendsActivityResponse>>(resp)
+            };
         }
 
-        public Task<GenericResponse<List<RecommendedBookResponse>>> GetRecommendedBookByGenresAsync(int userId)
+        public async Task<GenericResponse<List<RecommendedBookResponse>>> GetRecommendedBookByGenresAsync(int userId)
         {
-            throw new NotImplementedException();
+            var resp = await _bookDAL.GetRecommendedBooksAsync(userId);
+
+            return new GenericResponse<List<RecommendedBookResponse>>
+            {
+                Success = true,
+                Data = _mapper.Map<List<Book>, List<RecommendedBookResponse>>(resp)
+            };
         }
     }
 }
