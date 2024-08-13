@@ -13,6 +13,7 @@ using ReadRealmBackend.DAL.Authors;
 using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookTypes;
 using ReadRealmBackend.DAL.BookUsers;
+using ReadRealmBackend.DAL.Friends;
 using ReadRealmBackend.DAL.Genres;
 using ReadRealmBackend.DAL.Languages;
 using ReadRealmBackend.DAL.NoteTypes;
@@ -43,6 +44,7 @@ namespace ReadRealmBackend.Common
             services.AddScoped<INoteTypeDAL, NoteTypeDAL>();
             services.AddScoped<IStatusDAL, StatusDAL>();
             services.AddScoped<IBookUserDAL, BookUserDAL>();
+            services.AddScoped<IFriendDAL, FriendDAL>();
         }
 
         public void InitializeBL(IServiceCollection services)

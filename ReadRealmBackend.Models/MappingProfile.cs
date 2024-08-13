@@ -61,7 +61,11 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().Rating))
                 .ForMember(dest => dest.TotalChapters, opt => opt.MapFrom(src => src.ChapterCount))
                 .ReverseMap();
-            CreateMap<Book, RecommendedBookResponse>().ReverseMap();
+
+            CreateMap<Book, RecommendedBookResponse>()
+                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
+                 .ReverseMap();
+
             CreateMap<Book, RecommendedBookByFriendsActivityResponse>()
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
                 .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().Rating))
