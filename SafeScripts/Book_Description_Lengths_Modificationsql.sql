@@ -12,6 +12,6 @@ BEGIN
 	IF EXISTS(SELECT 1 FROM sys.columns WHERE Name = N'Description' AND Object_ID = Object_ID(N'Books'))
 	BEGIN  
 		ALTER TABLE Books
-		ALTER COLUMN Description VARCHAR(MAX)
+		ALTER COLUMN [Description] VARCHAR(MAX)
 	END
 END

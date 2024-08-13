@@ -59,13 +59,9 @@ public partial class ReadRealmContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_BookId");
 
             entity.Property(e => e.BriefDescription)
-                .IsRequired()
-                .HasMaxLength(100)
+                .HasMaxLength(300)
                 .IsUnicode(false);
-            entity.Property(e => e.Description)
-                .IsRequired()
-                .HasMaxLength(1000)
-                .IsUnicode(false);
+            entity.Property(e => e.Description).IsUnicode(false);
             entity.Property(e => e.Isbn)
                 .IsRequired()
                 .HasMaxLength(20)
@@ -89,7 +85,6 @@ public partial class ReadRealmContext : DbContext
                         .HasConstraintName("FK_BookAuthor_AuthorId"),
                     l => l.HasOne<Book>().WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_BookAuthor_BookId"),
                     j =>
                     {
@@ -106,7 +101,6 @@ public partial class ReadRealmContext : DbContext
                         .HasConstraintName("FK_BookGenre_GenreId"),
                     l => l.HasOne<Book>().WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_BookGenre_BookId"),
                     j =>
                     {
@@ -123,7 +117,6 @@ public partial class ReadRealmContext : DbContext
                         .HasConstraintName("FK_BookLanguage_LanguageId"),
                     l => l.HasOne<Book>().WithMany()
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("FK_BookLanguage_BookId"),
                     j =>
                     {
@@ -152,7 +145,6 @@ public partial class ReadRealmContext : DbContext
 
             entity.HasOne(d => d.Book).WithMany(p => p.BookUsers)
                 .HasForeignKey(d => d.BookId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_BookUser_BookId");
 
             entity.HasOne(d => d.Status).WithMany(p => p.BookUsers)
@@ -205,7 +197,6 @@ public partial class ReadRealmContext : DbContext
 
             entity.HasOne(d => d.Book).WithMany(p => p.Notes)
                 .HasForeignKey(d => d.BookId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Note_BookId");
 
             entity.HasOne(d => d.Type).WithMany(p => p.Notes)
