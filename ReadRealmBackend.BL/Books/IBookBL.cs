@@ -8,5 +8,6 @@ namespace ReadRealmBackend.BL.Books
     {
         Task<GenericResponse<BookResponse?>> GetBookAsync(int id);
         Task<GenericResponse<string>> InsertBookAsync(InsertBookRequest req);
+        Task<GenericResponse<string>> DeleteBookAsync(int id);
     }
 }

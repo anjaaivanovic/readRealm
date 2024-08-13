@@ -123,5 +123,37 @@ namespace ReadRealmBackend.BL.Books
                 Errors = new List<string> { "Changes could not be saved!" }
             };
         }
+
+        public async Task<GenericResponse<string>> DeleteBookAsync(int id)
+        {
+            var toDelete = await _bookDAL.GetOneAsync(id);
+
+            if (toDelete == null)
+            {
+                return new GenericResponse<string>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No book with such id!" }
+                };
+            }
+
+            _bookDAL.DeleteOne(toDelete);
+            var success = await _bookDAL.SaveAsync();
+
+            if (success)
+            {
+                return new GenericResponse<string>
+                {
+                    Success = success,
+                    Data = "Successfully deleted book!"
+                };
+            }
+
+            return new GenericResponse<string>
+            {
+                Success = success,
+                Errors = new List<string> { "Changes could not be saved!" }
+            };
+        }
     }
 }

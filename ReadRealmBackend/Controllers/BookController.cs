@@ -34,5 +34,15 @@ namespace ReadRealmBackend.API.Controllers
         }
 
         #endregion
+
+        #region DELETE
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteBookAsync(int id)
+        {
+            return Ok(await _bookBL.DeleteBookAsync(id));
+        }
+
+        #endregion
     }
 }
