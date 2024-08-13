@@ -7,5 +7,6 @@ namespace ReadRealmBackend.DAL.Authors
     {
         Task<bool> CheckAuthorAsync(int id);
         Task<bool> CheckAuthorByFullNameAsync(string fullName);
+        Task<List<Author>> GetMultipleAuthorsAsync(List<int> ids);
     }
 }

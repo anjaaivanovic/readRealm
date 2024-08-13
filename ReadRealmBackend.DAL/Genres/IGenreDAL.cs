@@ -7,5 +7,6 @@ namespace ReadRealmBackend.DAL.Genres
     {
         Task<bool> CheckGenreAsync(int id);
         Task<bool> CheckGenreByNameAsync(string name);
+        Task<List<Genre>> GetMultipleGenresAsync(List<int> ids);
     }
 }

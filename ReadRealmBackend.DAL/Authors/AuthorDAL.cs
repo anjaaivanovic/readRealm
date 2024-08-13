@@ -16,9 +16,22 @@ namespace ReadRealmBackend.DAL.Authors
             return await _set.AnyAsync(author =>  author.Id == id);
         }
 
+        #region Check
+
         public async Task<bool> CheckAuthorByFullNameAsync(string fullName)
         {
             return await _set.AnyAsync(author => author.FirstName + " " + author.LastName == fullName);
         }
+
+        #endregion
+
+        #region Get
+
+        public async Task<List<Author>> GetMultipleAuthorsAsync(List<int> ids)
+        {
+            return await _set.Where(author => ids.Contains(author.Id)).ToListAsync();
+        }
+
+        #endregion
     }
 }

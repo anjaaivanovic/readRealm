@@ -11,6 +11,8 @@ namespace ReadRealmBackend.DAL.Languages
         {
         }
 
+        #region Check
+
         public async Task<bool> CheckLanguageAsync(int id)
         {
             return await _set.AnyAsync(language => language.Id == id);
@@ -20,5 +22,16 @@ namespace ReadRealmBackend.DAL.Languages
         {
             return await _set.AnyAsync(language => language.Name == name);
         }
+
+        #endregion
+
+        #region Get
+
+        public async Task<List<Language>> GetMultipleLanguagesAsync(List<int> ids)
+        {
+            return await _set.Where(language => ids.Contains(language.Id)).ToListAsync();
+        }
+
+        #endregion
     }
 }

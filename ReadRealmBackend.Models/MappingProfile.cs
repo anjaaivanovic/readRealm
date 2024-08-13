@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Authors;
+using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Requests.BookTypes;
 using ReadRealmBackend.Models.Requests.Genres;
 using ReadRealmBackend.Models.Requests.Languages;
@@ -26,6 +27,10 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
                 .ForMember(dest => dest.Languages, opt => opt.MapFrom(src => src.Languages.Select(l => l.Name).ToList()))
                 .ReverseMap();
+            CreateMap<Book, InsertBookRequest>()
+                .ForMember(dest => dest.Published, opt => opt.MapFrom(src => src.Published.ToDateTime(new TimeOnly(0, 0))))
+                .ReverseMap()
+                .ForMember(dest => dest.Published, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.Published)));
 
             CreateMap<Note, NoteResponse>().ReverseMap();
 

@@ -11,6 +11,8 @@ namespace ReadRealmBackend.DAL.Genres
         {
         }
 
+        #region Check
+
         public async Task<bool> CheckGenreAsync(int id)
         {
             return await _set.AnyAsync(genre => genre.Id == id);
@@ -20,5 +22,17 @@ namespace ReadRealmBackend.DAL.Genres
         {
             return await _set.AnyAsync(genre => genre.Name== name);
         }
+
+        #endregion
+
+
+        #region Get
+
+        public async Task<List<Genre>> GetMultipleGenresAsync(List<int> ids)
+        {
+            return await _set.Where(genre => ids.Contains(genre.Id)).ToListAsync();
+        }
+
+        #endregion
     }
 }

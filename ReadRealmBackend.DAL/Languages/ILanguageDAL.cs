@@ -7,5 +7,6 @@ namespace ReadRealmBackend.DAL.Languages
     {
         Task<bool> CheckLanguageAsync(int id);
         Task<bool> CheckLanguageByNameAsync(string name);
+        Task<List<Language>> GetMultipleLanguagesAsync(List<int> ids);
     }
 }
