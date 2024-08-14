@@ -11,7 +11,7 @@ namespace ReadRealmBackend.DAL.Friends
         {
         }
 
-        public async Task<bool> CheckFriendsAsync(int userId)
+        public async Task<bool> CheckFriendsAsync(string userId)
         {
             return await _set.AnyAsync(f => f.FirstUserId == userId || f.SecondUserId == userId);
         }

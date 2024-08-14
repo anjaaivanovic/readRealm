@@ -26,7 +26,7 @@ namespace ReadRealmBackend.DAL.Books
                 .FirstOrDefaultAsync(book => book.Id == id);
         }
 
-        public async Task<List<Book>> GetContinueReadingBooksAsync(int userId)
+        public async Task<List<Book>> GetContinueReadingBooksAsync(string userId)
         {
             var readingStatus = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadingStatus)).Id;
 
@@ -45,7 +45,7 @@ namespace ReadRealmBackend.DAL.Books
                 .ToListAsync();
         }
 
-        public async Task<List<Book>> GetRecommendedBooksAsync(int userId)
+        public async Task<List<Book>> GetRecommendedBooksAsync(string userId)
         {
             var usersGenres = await _context.BookUsers
                 .Where(bu => bu.UserId == userId)
@@ -72,7 +72,7 @@ namespace ReadRealmBackend.DAL.Books
             }
         }
 
-        public async Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(int userId)
+        public async Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(string userId)
         {
             var friends = await _context.Friends
                 .Where(f => f.FirstUserId == userId || f.SecondUserId == userId)

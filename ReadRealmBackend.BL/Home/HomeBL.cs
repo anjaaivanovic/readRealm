@@ -24,7 +24,7 @@ namespace ReadRealmBackend.BL.Home
             _friendDAL = friendDAL;
         }
 
-        public async Task<GenericResponse<HomeStats>> GetStats(int userId)
+        public async Task<GenericResponse<HomeStats>> GetStats(string userId)
         {
             var stats = new HomeStats();
             stats.TotalBooksRead = await _bookUserDAL.TotalBooksReadAsync(userId);
@@ -39,7 +39,7 @@ namespace ReadRealmBackend.BL.Home
             };
         }
 
-        public async Task<GenericResponse<List<ContinueReadingBookResponse>>> GetContinueReadingBooksAsync(int userId)
+        public async Task<GenericResponse<List<ContinueReadingBookResponse>>> GetContinueReadingBooksAsync(string userId)
         {
             var resp = await _bookDAL.GetContinueReadingBooksAsync(userId);
 
@@ -50,7 +50,7 @@ namespace ReadRealmBackend.BL.Home
             };
         }
 
-        public async Task<GenericResponse<List<RecommendedBookByFriendsActivityResponse>>> GetRecommendedBookByFriendsActivityAsync(int userId)
+        public async Task<GenericResponse<List<RecommendedBookByFriendsActivityResponse>>> GetRecommendedBookByFriendsActivityAsync(string userId)
         {
             if (!await _friendDAL.CheckFriendsAsync(userId))
             {
@@ -79,7 +79,7 @@ namespace ReadRealmBackend.BL.Home
             };
         }
 
-        public async Task<GenericResponse<List<RecommendedBookResponse>>> GetRecommendedBookByGenresAsync(int userId)
+        public async Task<GenericResponse<List<RecommendedBookResponse>>> GetRecommendedBookByGenresAsync(string userId)
         {
             var resp = await _bookDAL.GetRecommendedBooksAsync(userId);
 

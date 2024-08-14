@@ -12,7 +12,7 @@ namespace ReadRealmBackend.DAL.BookUsers
         {
         }
 
-        public async Task<string?> FavoriteGenreAsync(int userId)
+        public async Task<string?> FavoriteGenreAsync(string userId)
         {
             var genre = await _set
                 .Where(bu => bu.UserId == userId)
@@ -37,18 +37,18 @@ namespace ReadRealmBackend.DAL.BookUsers
             return genre;
         }
 
-        public async Task<int> TotalBooksReadAsync(int userId)
+        public async Task<int> TotalBooksReadAsync(string userId)
         {
             var readStatus = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadStatus);
             return await _set.Where(bu => bu.UserId == userId && bu.StatusId == readStatus.Id).CountAsync();
         }
 
-        public async Task<int> TotalBooksRatedAsync(int userId)
+        public async Task<int> TotalBooksRatedAsync(string userId)
         {
             return await _set.Where(bu => bu.UserId == userId && bu.Rating != null).CountAsync();
         }
 
-        public async Task<decimal?> AverageRatingAsync(int userId)
+        public async Task<decimal?> AverageRatingAsync(string userId)
         {
             return await _set.Where(bu => bu.UserId == userId && bu.Rating != null).AverageAsync(bu => bu.Rating);
         }

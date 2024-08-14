@@ -141,6 +141,9 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => new { e.BookId, e.UserId }).HasName("PK_BookUser_BookId_UserId");
 
+            entity.Property(e => e.UserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Rating).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.Book).WithMany(p => p.BookUsers)
@@ -155,6 +158,13 @@ public partial class ReadRealmContext : DbContext
         modelBuilder.Entity<Friend>(entity =>
         {
             entity.HasKey(e => new { e.FirstUserId, e.SecondUserId }).HasName("PK_Friend_FirstUserId_SecondUserId");
+
+            entity.Property(e => e.FirstUserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.SecondUserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<FriendRequest>(entity =>
@@ -190,6 +200,9 @@ public partial class ReadRealmContext : DbContext
         {
             entity.HasKey(e => new { e.BookId, e.UserId, e.Chapter, e.DatePosted }).HasName("PK_Note_BookId_UserId_Chapter_DatePosted");
 
+            entity.Property(e => e.UserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Text)
                 .IsRequired()
                 .HasMaxLength(1000)

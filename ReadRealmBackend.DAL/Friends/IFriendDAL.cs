@@ -5,6 +5,6 @@ namespace ReadRealmBackend.DAL.Friends
 {
     public interface IFriendDAL: IBaseDAL<Friend>
     {
-        Task<bool> CheckFriendsAsync(int userId);
+        Task<bool> CheckFriendsAsync(string userId);
     }
 }

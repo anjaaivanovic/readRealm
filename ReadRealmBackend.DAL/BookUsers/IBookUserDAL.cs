@@ -5,9 +5,9 @@ namespace ReadRealmBackend.DAL.BookUsers
 {
     public interface IBookUserDAL: IBaseDAL<BookUser>
     {
-        Task<string?> FavoriteGenreAsync(int userId);
-        Task<int> TotalBooksReadAsync(int userId);
-        Task<int> TotalBooksRatedAsync(int userId);
-        Task<decimal?> AverageRatingAsync(int userId);
+        Task<string?> FavoriteGenreAsync(string userId);
+        Task<int> TotalBooksReadAsync(string userId);
+        Task<int> TotalBooksRatedAsync(string userId);
+        Task<decimal?> AverageRatingAsync(string userId);
     }
 }

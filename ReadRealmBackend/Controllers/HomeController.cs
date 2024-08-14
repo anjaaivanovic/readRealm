@@ -15,25 +15,25 @@ namespace ReadRealmBackend.API.Controllers
         }
 
         [HttpGet("stats")]
-        public async Task<IActionResult> GetStats(int userId)
+        public async Task<IActionResult> GetStats(string userId)
         {
             return Ok(await _homeBL.GetStats(userId));
         }
 
         [HttpGet("continueReading")]
-        public async Task<IActionResult> GetContinueReadingBooksAsync(int userId)
+        public async Task<IActionResult> GetContinueReadingBooksAsync(string userId)
         {
             return Ok(await _homeBL.GetContinueReadingBooksAsync(userId));
         }
 
         [HttpGet("friendsReading")]
-        public async Task<IActionResult> GetRecommendedBookByFriendsActivityAsync(int userId)
+        public async Task<IActionResult> GetRecommendedBookByFriendsActivityAsync(string userId)
         {
             return Ok(await _homeBL.GetRecommendedBookByFriendsActivityAsync(userId));
         }
 
         [HttpGet("recommended")]
-        public async Task<IActionResult> GetRecommendedBookByGenresAsync(int userId)
+        public async Task<IActionResult> GetRecommendedBookByGenresAsync(string userId)
         {
             return Ok(await _homeBL.GetRecommendedBookByGenresAsync(userId));
         }
