@@ -84,6 +84,11 @@ namespace ReadRealmBackend.Common
                 .ReverseMap()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.StartDate)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.HasValue ? DateOnly.FromDateTime(src.EndDate.Value) : (DateOnly?)null));
+
+            CreateMap<Friend, FriendRequest>()
+                .ForMember(dest => dest.SenderUserId, opt => opt.MapFrom(src => src.FirstUserId))
+                .ForMember(dest => dest.ReceiverUserId, opt => opt.MapFrom(src => src.SecondUserId))
+                .ReverseMap();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace ReadRealmBackend.Models.Entities;
 
 public partial class FriendRequest
 {
-    public int SenderUserId { get; set; }
+    public string SenderUserId { get; set; }
 
-    public int ReceiverUserId { get; set; }
+    public string ReceiverUserId { get; set; }
 }

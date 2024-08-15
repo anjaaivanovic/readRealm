@@ -170,6 +170,13 @@ public partial class ReadRealmContext : DbContext
         modelBuilder.Entity<FriendRequest>(entity =>
         {
             entity.HasKey(e => new { e.SenderUserId, e.ReceiverUserId }).HasName("PK_FriendRequest_SenderUserId_ReceiverUserId");
+
+            entity.Property(e => e.SenderUserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ReceiverUserId)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Genre>(entity =>
