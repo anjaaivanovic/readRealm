@@ -14,6 +14,8 @@ namespace ReadRealmBackend.DAL.Books
         {
         }
 
+        #region Get
+
         public async Task<Book?> GetBookAsync(int id)
         {
             return await _set
@@ -105,5 +107,7 @@ namespace ReadRealmBackend.DAL.Books
                 .Include(b => b.Notes)
                 .ToListAsync();
         }
+
+        #endregion
     }
 }

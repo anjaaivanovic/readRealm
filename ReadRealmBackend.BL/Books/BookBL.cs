@@ -19,6 +19,7 @@ namespace ReadRealmBackend.BL.Books
         private readonly IGenreDAL _genreDAL;
         private readonly ILanguageDAL _languageDAL;
         private readonly IMapper _mapper;
+
         public BookBL(IBookDAL bookDAL, IMapper mapper, IBookTypeDAL bookTypeDAL, IGenreDAL genreDAL, ILanguageDAL languageDAL, IAuthorDAL authorDAL)
         {
             _bookDAL = bookDAL;

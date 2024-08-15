@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ReadRealmBackend.BL.Authors;
 using ReadRealmBackend.BL.Books;
 using ReadRealmBackend.BL.BookTypes;
+using ReadRealmBackend.BL.BookUsers;
 using ReadRealmBackend.BL.Genres;
 using ReadRealmBackend.BL.Home;
 using ReadRealmBackend.BL.Languages;
@@ -57,6 +58,7 @@ namespace ReadRealmBackend.Common
             services.AddScoped<INoteTypeBL, NoteTypeBL>();
             services.AddScoped<IStatusBL, StatusBL>();
             services.AddScoped<IHomeBL, HomeBL>();
+            services.AddScoped<IBookUserBL, BookUserBL>();
         }
 
         public void InitializeOther(IServiceCollection services)
