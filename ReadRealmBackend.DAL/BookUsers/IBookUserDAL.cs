@@ -1,0 +1,13 @@
+﻿using ReadRealmBackend.DAL.Base;
+using ReadRealmBackend.Models.Entities;
+
+namespace ReadRealmBackend.DAL.BookUsers
+{
+    public interface IBookUserDAL: IBaseDAL<BookUser>
+    {
+        Task<string?> FavoriteGenreAsync(string userId);
+        Task<int> TotalBooksReadAsync(string userId);
+        Task<int> TotalBooksRatedAsync(string userId);
+        Task<decimal?> AverageRatingAsync(string userId);
+    }
+}

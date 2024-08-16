@@ -1,0 +1,57 @@
+use ReadRealm
+GO
+
+IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_Name = 'Authors'))
+BEGIN
+	IF (NOT EXISTS (SELECT 1 FROM sys.key_constraints  WHERE object_id = OBJECT_ID(N'Author_Unique')))
+	BEGIN
+	
+		ALTER TABLE Authors
+		ADD CONSTRAINT Author_Unique UNIQUE (FirstName, LastName);
+	END
+END
+
+IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_Name = 'BookTypes'))
+BEGIN
+	IF (NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE object_id = OBJECT_ID(N'BookType_Unique')))
+	BEGIN
+		ALTER TABLE BookTypes
+		ADD CONSTRAINT BookType_Unique UNIQUE ([Name]);
+	END
+END
+
+IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_Name = 'Genres'))
+BEGIN
+	IF (NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE object_id = OBJECT_ID(N'Genre_Unique')))
+	BEGIN
+		ALTER TABLE Genres
+		ADD CONSTRAINT Genre_Unique UNIQUE ([Name]);
+	END
+END
+
+IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_Name = 'Languages'))
+BEGIN
+	IF (NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE object_id = OBJECT_ID(N'Language_Unique')))
+	BEGIN
+		ALTER TABLE Languages
+		ADD CONSTRAINT Language_Unique UNIQUE ([Name]);
+	END
+END
+
+IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_Name = 'NoteTypes'))
+BEGIN
+	IF (NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE object_id = OBJECT_ID(N'NoteType_Unique')))
+	BEGIN
+		ALTER TABLE NoteTypes
+		ADD CONSTRAINT NoteType_Unique UNIQUE ([Name]);
+	END
+END
+
+IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_Name = 'Statuses'))
+BEGIN
+	IF (NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE object_id = OBJECT_ID(N'Status_Unique')))
+	BEGIN
+		ALTER TABLE Statuses
+		ADD CONSTRAINT Status_Unique UNIQUE ([Name]);
+	END
+END

@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using ReadRealmBackend.Common.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,13 +17,15 @@ builder.Services.AddSwaggerGen();
 var serviceInitializer = new ServiceInitializer();
 serviceInitializer.Initialize(builder.Services);
 
+ConfigProvider.Initialize(builder.Configuration);
+
 #region Cors
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policyBuilder =>
     {
-        var allowedOrigins = builder.Configuration["Cors:AllowedOrigins"].Split(',');
+        var allowedOrigins = ConfigProvider.AllowedOrigins.Split(',');
         policyBuilder.WithOrigins(allowedOrigins)
                      .AllowAnyHeader()
                      .AllowAnyMethod();
@@ -41,10 +44,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            ValidateIssuerSigningKey = true
         };
     });
 
@@ -95,6 +95,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<JwtHelper>();
 
 app.MapControllers();
 
