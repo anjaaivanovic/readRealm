@@ -23,36 +23,40 @@ namespace ReadRealmBackend.BL.BookUsers
             _mapper = mapper;
         }
 
-        public async Task<GenericResponse<string>> InsertBookUserAsync(InsertBookUserRequest req)
+        private async Task<string?> ValidateBookRequest(InsertBookUserRequest req) 
         {
-            #region Validation
-
             var book = await _bookDAL.GetOneAsync(req.BookId);
 
             if (book == null)
             {
-                return new GenericResponse<string>
-                {
-                    Success = false,
-                    Errors = new List<string> { "No book with such id!" }
-                };
+                return  "No book with such id!";
             }
 
             if (book.ChapterCount < req.CurrentChapter)
             {
-                return new GenericResponse<string>
-                {
-                    Success = false,
-                    Errors = new List<string> { "Invalid chapter value!" }
-                };
+                return "Invalid chapter value!";
             }
 
             if (!await _statusDAL.CheckStatusAsync(req.StatusId))
             {
+                return "No status with such id!";
+            }
+
+            return null;
+        }
+
+        public async Task<GenericResponse<string>> InsertBookUserAsync(InsertBookUserRequest req)
+        {
+            #region Validation
+
+            var error = await ValidateBookRequest(req);
+
+            if (error != null)
+            {
                 return new GenericResponse<string>
                 {
                     Success = false,
-                    Errors = new List<string> { "No status with such id!" }
+                    Errors = new List<string> { error }
                 };
             }
 
@@ -66,7 +70,44 @@ namespace ReadRealmBackend.BL.BookUsers
                 return new GenericResponse<string>
                 {
                     Success = success,
-                    Data = "Successfully inserted book-user link!"
+                    Data = "Successfully tracked progress!"
+                };
+            }
+
+            return new GenericResponse<string>
+            {
+                Success = success,
+                Errors = new List<string> { "Changes could not be saved!" }
+            };
+        }
+
+        public async Task<GenericResponse<string>> UpdateBookUserAsync(InsertBookUserRequest req)
+        {
+            #region Validation
+
+            var error = await ValidateBookRequest(req);
+
+            if (error != null)
+            {
+                return new GenericResponse<string>
+                {
+                    Success = false,
+                    Errors = new List<string> { error }
+                };
+            }
+
+            #endregion
+
+            _bookUserDAL.UpdateOne(_mapper.Map<InsertBookUserRequest, BookUser>(req));
+
+            var success = await _bookUserDAL.SaveAsync();
+
+            if (success)
+            {
+                return new GenericResponse<string>
+                {
+                    Success = success,
+                    Data = "Successfully updated progress!"
                 };
             }
 

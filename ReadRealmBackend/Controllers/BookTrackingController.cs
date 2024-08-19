@@ -20,5 +20,11 @@ namespace ReadRealmBackend.API.Controllers
         {
             return Ok(await _bookUserBL.InsertBookUserAsync(req));
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateBookUserAsync(InsertBookUserRequest req)
+        {
+            return Ok(await _bookUserBL.UpdateBookUserAsync(req));
+        }
     }
 }
