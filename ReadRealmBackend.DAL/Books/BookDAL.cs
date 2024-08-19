@@ -50,11 +50,15 @@ namespace ReadRealmBackend.DAL.Books
         public async Task<List<Book>> GetRecommendedBooksAsync(string userId)
         {
             var usersGenres = await _context.BookUsers
-                .Where(bu => bu.UserId == userId)
-                .Join(_set, bu => bu.BookId, b => b.Id, (bu, b) => b)
-                .Select(b => b.Genres.Select(g => g.Id))
-                .ToListAsync();
+             .Where(bu => bu.UserId == userId)
+             .Join(_set, bu => bu.BookId, b => b.Id, (bu, b) => b)
+             .SelectMany(b => b.Genres.Select(g => g.Id))
+             .ToListAsync();
 
+            foreach (var user in usersGenres)
+            {
+                Console.WriteLine(user);
+            }
             var usersBooks = await _context.BookUsers
                .Where(bu => bu.UserId == userId)
                .Select(bu => bu.BookId)
@@ -63,14 +67,16 @@ namespace ReadRealmBackend.DAL.Books
             if (usersGenres.Any())
             {
                 return await _set
-                    .Where(b => usersGenres.Contains(b.Genres.Select(g => g.Id)) && !usersBooks.Contains(b.Id))
-                    .ToListAsync();
+                  .Where(b => b.Genres.Any(g => usersGenres.Contains(g.Id)) && !usersBooks.Contains(b.Id))
+                  .Take(recommendationCount)
+                  .ToListAsync();
             }
             else
             {
                 return await _set
-                    .DistinctBy(b => b.Genres)
-                    .ToListAsync();
+                .OrderBy(b => Guid.NewGuid())
+                .Take(recommendationCount)
+                .ToListAsync();
             }
         }
 
