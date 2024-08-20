@@ -17,9 +17,9 @@ public partial class Note
 
     public string Text { get; set; }
 
-    public int Private { get; set; }
+    public bool Private { get; set; }
 
-    public int? TypeId { get; set; }
+    public int TypeId { get; set; }
 
     public virtual Book Book { get; set; }
 

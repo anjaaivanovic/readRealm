@@ -221,6 +221,7 @@ public partial class ReadRealmContext : DbContext
 
             entity.HasOne(d => d.Type).WithMany(p => p.Notes)
                 .HasForeignKey(d => d.TypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Note_TypeId");
         });
 
