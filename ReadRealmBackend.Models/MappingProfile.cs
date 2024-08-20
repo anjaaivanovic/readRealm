@@ -4,8 +4,10 @@ using ReadRealmBackend.Models.Requests.Authors;
 using ReadRealmBackend.Models.Requests.BookAuthors;
 using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Requests.BookTypes;
+using ReadRealmBackend.Models.Requests.BookUsers;
 using ReadRealmBackend.Models.Requests.Genres;
 using ReadRealmBackend.Models.Requests.Languages;
+using ReadRealmBackend.Models.Requests.Notes;
 using ReadRealmBackend.Models.Requests.NoteTypes;
 using ReadRealmBackend.Models.Requests.Statuses;
 using ReadRealmBackend.Models.Responses.Authors;
@@ -23,6 +25,8 @@ namespace ReadRealmBackend.Common
     {
         public MappingProfile()
         {
+            #region Book
+
             CreateMap<Book, BookResponse>()
                  .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
@@ -32,33 +36,6 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.Published, opt => opt.MapFrom(src => src.Published.ToDateTime(new TimeOnly(0, 0))))
                 .ReverseMap()
                 .ForMember(dest => dest.Published, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.Published)));
-
-            CreateMap<Note, NoteResponse>().ReverseMap();
-
-            CreateMap<Author, InsertAuthorRequest>().ReverseMap();
-            CreateMap<Author, UpdateAuthorRequest>().ReverseMap();
-            CreateMap<Author, AuthorResponse>().ReverseMap();
-
-            CreateMap<BookType, InsertBookTypeRequest>().ReverseMap();
-            CreateMap<BookType, UpdateBookTypeRequest>().ReverseMap();
-            CreateMap<BookType, BookTypeResponse>().ReverseMap();
-
-            CreateMap<Genre, InsertGenreRequest>().ReverseMap();
-            CreateMap<Genre, UpdateGenreRequest>().ReverseMap();
-            CreateMap<Genre, GenreResponse>().ReverseMap();
-
-            CreateMap<Language, InsertLanguageRequest>().ReverseMap();
-            CreateMap<Language, UpdateLanguageRequest>().ReverseMap();
-            CreateMap<Language, LanguageResponse>().ReverseMap();
-
-            CreateMap<NoteType, InsertNoteTypeRequest>().ReverseMap();
-            CreateMap<NoteType, UpdateNoteTypeRequest>().ReverseMap();
-            CreateMap<NoteType, NoteTypeResponse>().ReverseMap();
-
-            CreateMap<Status, InsertStatusRequest>().ReverseMap();
-            CreateMap<Status, UpdateStatusRequest>().ReverseMap();
-            CreateMap<Status, StatusResponse>().ReverseMap();
-
             CreateMap<Book, ContinueReadingBookResponse>()
                 .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
@@ -78,17 +55,87 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.FriendQuote, opt => opt.MapFrom(src => src.Notes.OrderByDescending(n => n.DatePosted).FirstOrDefault().Text))
                 .ReverseMap();
 
-            CreateMap<BookUser, InsertBookUserRequest>()
+            #endregion
+
+            #region Note
+
+            CreateMap<Note, NoteResponse>().ReverseMap();
+            CreateMap<InsertNoteRequest, InsertNoteFullRequest>().ReverseMap();
+            CreateMap<Note, InsertNoteFullRequest>()
+                .ForMember(dest => dest.DatePosted, opt => opt.MapFrom(src => src.DatePosted.ToDateTime(new TimeOnly(0, 0))))
+                .ReverseMap()
+                .ForMember(dest => dest.DatePosted, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DatePosted)));
+
+            #endregion
+
+            #region Author
+
+            CreateMap<Author, InsertAuthorRequest>().ReverseMap();
+            CreateMap<Author, UpdateAuthorRequest>().ReverseMap();
+            CreateMap<Author, AuthorResponse>().ReverseMap();
+
+            #endregion
+
+            #region BookType
+
+            CreateMap<BookType, InsertBookTypeRequest>().ReverseMap();
+            CreateMap<BookType, UpdateBookTypeRequest>().ReverseMap();
+            CreateMap<BookType, BookTypeResponse>().ReverseMap();
+
+            #endregion
+
+            #region Genre
+
+            CreateMap<Genre, InsertGenreRequest>().ReverseMap();
+            CreateMap<Genre, UpdateGenreRequest>().ReverseMap();
+            CreateMap<Genre, GenreResponse>().ReverseMap();
+
+            #endregion
+
+            #region Language
+
+            CreateMap<Language, InsertLanguageRequest>().ReverseMap();
+            CreateMap<Language, UpdateLanguageRequest>().ReverseMap();
+            CreateMap<Language, LanguageResponse>().ReverseMap();
+
+            #endregion
+
+            #region NoteType
+
+            CreateMap<NoteType, InsertNoteTypeRequest>().ReverseMap();
+            CreateMap<NoteType, UpdateNoteTypeRequest>().ReverseMap();
+            CreateMap<NoteType, NoteTypeResponse>().ReverseMap();
+
+            #endregion
+
+            #region Status
+
+            CreateMap<Status, InsertStatusRequest>().ReverseMap();
+            CreateMap<Status, UpdateStatusRequest>().ReverseMap();
+            CreateMap<Status, StatusResponse>().ReverseMap();
+
+            #endregion
+
+            #region BookUser
+
+            CreateMap<BookUser, InsertBookUserFullRequest>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToDateTime(new TimeOnly(0, 0))))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.HasValue ? src.EndDate.Value.ToDateTime(new TimeOnly(0, 0)) : (DateTime?)null))
                 .ReverseMap()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.StartDate)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.HasValue ? DateOnly.FromDateTime(src.EndDate.Value) : (DateOnly?)null));
+            CreateMap<InsertBookUserRequest, InsertBookUserFullRequest>().ReverseMap();
+            
+            #endregion
+
+            #region Friend
 
             CreateMap<Friend, FriendRequest>()
                 .ForMember(dest => dest.SenderUserId, opt => opt.MapFrom(src => src.FirstUserId))
                 .ForMember(dest => dest.ReceiverUserId, opt => opt.MapFrom(src => src.SecondUserId))
                 .ReverseMap();
+
+            #endregion
         }
     }
 }

@@ -8,6 +8,7 @@ using ReadRealmBackend.BL.Friends;
 using ReadRealmBackend.BL.Genres;
 using ReadRealmBackend.BL.Home;
 using ReadRealmBackend.BL.Languages;
+using ReadRealmBackend.BL.Notes;
 using ReadRealmBackend.BL.NoteTypes;
 using ReadRealmBackend.BL.Statuses;
 using ReadRealmBackend.Common.Services;
@@ -19,6 +20,7 @@ using ReadRealmBackend.DAL.FriendRequests;
 using ReadRealmBackend.DAL.Friends;
 using ReadRealmBackend.DAL.Genres;
 using ReadRealmBackend.DAL.Languages;
+using ReadRealmBackend.DAL.Notes;
 using ReadRealmBackend.DAL.NoteTypes;
 using ReadRealmBackend.DAL.Statuses;
 using ReadRealmBackend.Models.Context;
@@ -49,6 +51,7 @@ namespace ReadRealmBackend.Common
             services.AddScoped<IBookUserDAL, BookUserDAL>();
             services.AddScoped<IFriendDAL, FriendDAL>();
             services.AddScoped<IFriendRequestDAL, FriendRequestDAL>();
+            services.AddScoped<INoteDAL, NoteDAL>();
         }
 
         public void InitializeBL(IServiceCollection services)
@@ -63,6 +66,7 @@ namespace ReadRealmBackend.Common
             services.AddScoped<IHomeBL, HomeBL>();
             services.AddScoped<IBookUserBL, BookUserBL>();
             services.AddScoped<IFriendBL, FriendBL>();
+            services.AddScoped<INoteBL, NoteBL>();
         }
 
         public void InitializeOther(IServiceCollection services)

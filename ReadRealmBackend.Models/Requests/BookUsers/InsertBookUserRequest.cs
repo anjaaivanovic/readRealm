@@ -8,9 +8,6 @@ namespace ReadRealmBackend.Models.Requests.BookAuthors
         public int BookId { get; set; }
 
         [Required]
-        public string UserId { get; set; }
-
-        [Required]
         [Range(0, int.MaxValue)]
         public int CurrentChapter { get; set; }
 

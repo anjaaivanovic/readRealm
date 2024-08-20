@@ -1,12 +1,10 @@
-using ReadRealmBackend.Common;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
-using ReadRealmBackend.Common.Services;
-using Clerk.Net.DependencyInjection;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using ReadRealmBackend.API.Middleware;
+using ReadRealmBackend.Common;
+using ReadRealmBackend.Common.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,6 +114,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<JwtHelper>();
 
 app.MapControllers();
 

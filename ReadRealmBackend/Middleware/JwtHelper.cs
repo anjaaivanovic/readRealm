@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace ReadRealmBackend.Common.Services
+﻿namespace ReadRealmBackend.API.Middleware
 {
     public class JwtHelper
     {
@@ -15,11 +13,11 @@ namespace ReadRealmBackend.Common.Services
         {
             if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
             {
-                var userId = context.User.FindFirst("sub")?.Value;
+                var userId = context.User.Identity.Name;
 
                 if (!string.IsNullOrEmpty(userId))
                 {
-                    context.Items["UserId"] = userId;
+                    context.Items["userId"] = userId;
                 }
             }
 

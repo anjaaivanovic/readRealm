@@ -52,5 +52,10 @@ namespace ReadRealmBackend.DAL.BookUsers
         {
             return await _set.Where(bu => bu.UserId == userId && bu.Rating != null).AverageAsync(bu => bu.Rating);
         }
+
+        public async Task<BookUser?> GetOneAsync(string userId, int bookId)
+        {
+            return await _set.FirstOrDefaultAsync(bu => bu.UserId == userId && bu.BookId == bookId);
+        }
     }
 }

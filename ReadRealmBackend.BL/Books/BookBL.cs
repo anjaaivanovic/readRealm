@@ -33,6 +33,16 @@ namespace ReadRealmBackend.BL.Books
         public async Task<GenericResponse<BookResponse?>> GetBookAsync(int id)
         {
             var book = await _bookDAL.GetBookAsync(id);
+
+            if (book == null)
+            {
+                return new GenericResponse<BookResponse?>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No book with such id!" }
+                };
+            }
+
             var mappedBook = _mapper.Map<Book, BookResponse>(book);
 
             return new GenericResponse<BookResponse?>
