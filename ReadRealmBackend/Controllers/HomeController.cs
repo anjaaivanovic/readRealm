@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReadRealmBackend.BL.Home;
 
 namespace ReadRealmBackend.API.Controllers
 {
     [ApiController]
     [Route("api/home")]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IHomeBL _homeBL;

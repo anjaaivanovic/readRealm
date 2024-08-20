@@ -4,6 +4,9 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using ReadRealmBackend.Common.Services;
+using Clerk.Net.DependencyInjection;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,16 +40,30 @@ builder.Services.AddCors(options =>
 #region Jwt
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    .AddJwtBearer(x =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        // Authority is the URL of your clerk instance
+        x.Authority = builder.Configuration["Clerk:Authority"];
+        x.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true
+            ValidateAudience = false,
+            NameClaimType = ClaimTypes.NameIdentifier
+        };
+        x.Events = new JwtBearerEvents()
+        {
+            // Additional validation for AZP claim
+            OnTokenValidated = context =>
+            {
+                var azp = context.Principal?.FindFirstValue("azp");
+                // AuthorizedParty is the base URL of your frontend.
+                if (string.IsNullOrEmpty(azp) || !azp.Equals(builder.Configuration["Clerk:AuthorizedParty"]))
+                    context.Fail("AZP Claim is invalid or missing");
+
+                return Task.CompletedTask;
+            }
         };
     });
+
 
 #endregion
 
@@ -81,7 +98,9 @@ builder.Services.AddSwaggerGen(option =>
 
 #endregion
 
+
 var app = builder.Build();
+
 
 app.UseCors();
 
@@ -94,9 +113,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthentication();
 
-app.UseMiddleware<JwtHelper>();
+app.UseAuthorization();
 
 app.MapControllers();
 
