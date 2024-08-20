@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReadRealmBackend.BL.Friends;
 using ReadRealmBackend.Models.Entities;
 
@@ -6,6 +7,7 @@ namespace ReadRealmBackend.API.Controllers
 {
     [ApiController]
     [Route("api/friend")]
+    [Authorize]
     public class FriendController : Controller
     {
         private readonly IFriendBL _friendBL;
@@ -16,15 +18,17 @@ namespace ReadRealmBackend.API.Controllers
         }
 
         [HttpPost("request")]
-        public async Task<IActionResult> InsertFriendRequest(FriendRequest req)
+        public async Task<IActionResult> InsertFriendRequest(string friendId)
         {
-            return Ok(await _friendBL.InsertFriendRequestAsync(req));
+            var userId = HttpContext.Items["userId"] as string;
+            return Ok(await _friendBL.InsertFriendRequestAsync(new FriendRequest { SenderUserId = userId, ReceiverUserId = friendId }));
         }
 
         [HttpPost()]
-        public async Task<IActionResult> InsertFriendAsync(FriendRequest req)
+        public async Task<IActionResult> InsertFriendAsync(string friendId)
         {
-            return Ok(await _friendBL.InsertFriendAsync(req));
+            var userId = HttpContext.Items["userId"] as string;
+            return Ok(await _friendBL.InsertFriendAsync(new FriendRequest { SenderUserId = userId, ReceiverUserId = friendId }));
         }
     }
 }

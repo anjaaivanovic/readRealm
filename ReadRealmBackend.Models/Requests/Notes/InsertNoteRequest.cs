@@ -5,9 +5,6 @@ namespace ReadRealmBackend.Models.Requests.Notes
     public class InsertNoteRequest
     {
         [Required]
-        public string UserId { get; set; }
-
-        [Required]
         public int BookId { get; set; }
 
         [Required]

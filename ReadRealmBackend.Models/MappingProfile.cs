@@ -4,6 +4,7 @@ using ReadRealmBackend.Models.Requests.Authors;
 using ReadRealmBackend.Models.Requests.BookAuthors;
 using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Requests.BookTypes;
+using ReadRealmBackend.Models.Requests.BookUsers;
 using ReadRealmBackend.Models.Requests.Genres;
 using ReadRealmBackend.Models.Requests.Languages;
 using ReadRealmBackend.Models.Requests.Notes;
@@ -59,7 +60,8 @@ namespace ReadRealmBackend.Common
             #region Note
 
             CreateMap<Note, NoteResponse>().ReverseMap();
-            CreateMap<Note, InsertNoteRequest>()
+            CreateMap<InsertNoteRequest, InsertNoteFullRequest>().ReverseMap();
+            CreateMap<Note, InsertNoteFullRequest>()
                 .ForMember(dest => dest.DatePosted, opt => opt.MapFrom(src => src.DatePosted.ToDateTime(new TimeOnly(0, 0))))
                 .ReverseMap()
                 .ForMember(dest => dest.DatePosted, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.DatePosted)));
@@ -116,12 +118,17 @@ namespace ReadRealmBackend.Common
 
             #region BookUser
 
-            CreateMap<BookUser, InsertBookUserRequest>()
+            CreateMap<BookUser, InsertBookUserFullRequest>()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.StartDate.ToDateTime(new TimeOnly(0, 0))))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.HasValue ? src.EndDate.Value.ToDateTime(new TimeOnly(0, 0)) : (DateTime?)null))
                 .ReverseMap()
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.StartDate)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.HasValue ? DateOnly.FromDateTime(src.EndDate.Value) : (DateOnly?)null));
+            CreateMap<InsertBookUserRequest, InsertBookUserFullRequest>().ReverseMap();
+            
+            #endregion
+
+            #region Friend
 
             CreateMap<Friend, FriendRequest>()
                 .ForMember(dest => dest.SenderUserId, opt => opt.MapFrom(src => src.FirstUserId))

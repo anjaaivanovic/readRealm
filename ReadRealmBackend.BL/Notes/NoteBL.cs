@@ -26,7 +26,7 @@ namespace ReadRealmBackend.BL.Notes
             _noteTypeDAL = noteTypeDAL;
         }
 
-        public async Task<GenericResponse<string>> InsertNoteAsync(InsertNoteRequest req)
+        public async Task<GenericResponse<string>> InsertNoteAsync(InsertNoteFullRequest req)
         {
             #region Validation
 

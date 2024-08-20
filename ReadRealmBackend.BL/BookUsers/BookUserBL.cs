@@ -4,7 +4,7 @@ using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.DAL.Statuses;
 using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
-using ReadRealmBackend.Models.Requests.BookAuthors;
+using ReadRealmBackend.Models.Requests.BookUsers;
 
 namespace ReadRealmBackend.BL.BookUsers
 {
@@ -23,7 +23,7 @@ namespace ReadRealmBackend.BL.BookUsers
             _mapper = mapper;
         }
 
-        private async Task<string?> ValidateBookRequest(InsertBookUserRequest req) 
+        private async Task<string?> ValidateBookRequest(InsertBookUserFullRequest req) 
         {
             var book = await _bookDAL.GetOneAsync(req.BookId);
 
@@ -45,7 +45,7 @@ namespace ReadRealmBackend.BL.BookUsers
             return null;
         }
 
-        public async Task<GenericResponse<string>> InsertBookUserAsync(InsertBookUserRequest req)
+        public async Task<GenericResponse<string>> InsertBookUserAsync(InsertBookUserFullRequest req)
         {
             #region Validation
 
@@ -62,7 +62,7 @@ namespace ReadRealmBackend.BL.BookUsers
 
             #endregion
 
-            await _bookUserDAL.InsertOneAsync(_mapper.Map<InsertBookUserRequest, BookUser>(req));
+            await _bookUserDAL.InsertOneAsync(_mapper.Map<InsertBookUserFullRequest, BookUser>(req));
             var success = await _bookUserDAL.SaveAsync();
 
             if (success)
@@ -81,7 +81,7 @@ namespace ReadRealmBackend.BL.BookUsers
             };
         }
 
-        public async Task<GenericResponse<string>> UpdateBookUserAsync(InsertBookUserRequest req)
+        public async Task<GenericResponse<string>> UpdateBookUserAsync(InsertBookUserFullRequest req)
         {
             #region Validation
 
@@ -98,7 +98,7 @@ namespace ReadRealmBackend.BL.BookUsers
 
             #endregion
 
-            _bookUserDAL.UpdateOne(_mapper.Map<InsertBookUserRequest, BookUser>(req));
+            _bookUserDAL.UpdateOne(_mapper.Map<InsertBookUserFullRequest, BookUser>(req));
 
             var success = await _bookUserDAL.SaveAsync();
 

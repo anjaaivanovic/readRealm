@@ -5,6 +5,6 @@ namespace ReadRealmBackend.BL.Notes
 {
     public interface INoteBL
     {
-        Task<GenericResponse<string>> InsertNoteAsync(InsertNoteRequest req);
+        Task<GenericResponse<string>> InsertNoteAsync(InsertNoteFullRequest req);
     }
 }
