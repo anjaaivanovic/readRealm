@@ -13,6 +13,7 @@ using ReadRealmBackend.Models.Requests.Statuses;
 using ReadRealmBackend.Models.Responses.Authors;
 using ReadRealmBackend.Models.Responses.Books;
 using ReadRealmBackend.Models.Responses.BookTypes;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.Genres;
 using ReadRealmBackend.Models.Responses.Languages;
 using ReadRealmBackend.Models.Responses.Notes;
@@ -48,6 +49,7 @@ namespace ReadRealmBackend.Common
             CreateMap<Book, RecommendedBookResponse>()
                  .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
                  .ReverseMap();
+            CreateMap<GenericPaginationResponse<Book>, GenericPaginationResponse<RecommendedBookResponse>>().ReverseMap();
 
             CreateMap<Book, RecommendedBookByFriendsActivityResponse>()
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))

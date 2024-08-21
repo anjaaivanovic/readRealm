@@ -1,6 +1,7 @@
 ﻿using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.DAL.Books
 {
@@ -10,6 +11,6 @@ namespace ReadRealmBackend.DAL.Books
         Task<List<Book>> GetContinueReadingBooksAsync(string userId);
         Task<List<Book>> GetRecommendedBooksAsync(string userId);
         Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(string userId);
-        Task<List<Book>> GetBooksAsync(BookPaginationRequest req);
+        Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req);
     }
 }

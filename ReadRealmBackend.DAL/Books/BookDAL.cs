@@ -6,6 +6,7 @@ using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Context;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.DAL.Books
 {
@@ -117,7 +118,7 @@ namespace ReadRealmBackend.DAL.Books
                 .ToListAsync();
         }
 
-        public async Task<List<Book>> GetBooksAsync(BookPaginationRequest req)
+        public async Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req)
         {
             var query = _set.AsQueryable();
 
@@ -184,11 +185,15 @@ namespace ReadRealmBackend.DAL.Books
 
             #endregion
 
-            return await query
+            return new GenericPaginationResponse<Book>
+            {
+                Items = await query
                 .Include(book => book.Genres)
                 .Skip((req.Page - 1) * req.ItemCount)
                 .Take(req.ItemCount)
-                .ToListAsync();
+                .ToListAsync(),
+                TotalItemCount = await query.CountAsync()
+            };
         }
 
         #endregion

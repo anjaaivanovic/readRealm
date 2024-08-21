@@ -54,15 +54,9 @@ namespace ReadRealmBackend.BL.Books
 
         public async Task<GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>> GetBooksAsync(BookPaginationRequest req)
         {
-            var data = new GenericPaginationResponse<RecommendedBookResponse>
-            {
-                Items = _mapper.Map<List<RecommendedBookResponse>>(await _bookDAL.GetBooksAsync(req)),
-                TotalItemCount = await _bookDAL.GetTotalCountAsync()
-            };
-
             return new GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>
             {
-                Data = data,
+                Data = _mapper.Map<GenericPaginationResponse<RecommendedBookResponse>>(await _bookDAL.GetBooksAsync(req)),
                 Success = true
             };
         }
