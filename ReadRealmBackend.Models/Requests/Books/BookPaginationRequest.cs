@@ -4,6 +4,7 @@ namespace ReadRealmBackend.Models.Requests.Books
 {
     public class BookPaginationRequest: GenericPaginationRequest
     {
+        public string? Search {  get; set; }
         public int? GenreId { get; set; }
         public int? AuthorId { get; set; }
         public int? LanguageId { get; set; }

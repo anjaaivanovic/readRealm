@@ -1,11 +1,12 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReadRealmBackend.Common.Constants;
 using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Context;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
+using ReadRealmBackend.Models.Responses.Books;
 using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.DAL.Books
@@ -170,7 +171,7 @@ namespace ReadRealmBackend.DAL.Books
 
             #region Sort
 
-            var property = typeof(Book).GetProperty(req.Sort);
+            var property = typeof(Book).GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(req.Sort));
 
             if (property != null)
             {
@@ -192,6 +193,45 @@ namespace ReadRealmBackend.DAL.Books
                 .Skip((req.Page - 1) * req.ItemCount)
                 .Take(req.ItemCount)
                 .ToListAsync(),
+                TotalItemCount = await query.CountAsync()
+            };
+        }
+
+        public async Task<GenericPaginationResponse<UsersBook>> GetUsersBooksAsync(UsersBookPaginationRequest req, string userId)
+        {
+            var query = _context.BookUsers
+                .Where(bookUser => bookUser.UserId == userId && bookUser.StatusId == req.StatusId)
+                .Include(bu => bu.Book)
+                .ThenInclude(b => b.Authors)
+                .Select(bu => new UsersBook
+                {
+                    BookUser = bu,
+                    Book = bu.Book
+                });
+
+            #region Sort
+
+            var property = typeof(Book).GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(req.Sort));
+
+            if (property != null)
+            {
+                var parameter = Expression.Parameter(typeof(UsersBook), "b");
+                var propertyAccess = Expression.Property(Expression.Property(parameter, nameof(UsersBook.Book)), property);
+                var orderByExpression = Expression.Lambda<Func<UsersBook, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
+
+                query = req.IsAsc
+                    ? query.OrderBy(orderByExpression)
+                    : query.OrderByDescending(orderByExpression);
+            }
+
+            #endregion
+
+            return new GenericPaginationResponse<UsersBook>
+            {
+                Items = await query
+                    .Skip((req.Page - 1) * req.ItemCount)
+                    .Take(req.ItemCount)
+                    .ToListAsync(),
                 TotalItemCount = await query.CountAsync()
             };
         }

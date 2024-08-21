@@ -17,7 +17,5 @@ namespace ReadRealmBackend.Models.Requests.Generic
 
         [Required]
         public bool IsAsc { get; set; }
-
-        public string? Search { get; set; }
     }
 }

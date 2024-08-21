@@ -3,7 +3,9 @@ using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.DAL.Statuses;
 using ReadRealmBackend.Models.Entities;
+using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Requests.BookUsers;
+using ReadRealmBackend.Models.Responses.Books;
 using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.BookUsers
@@ -45,6 +47,24 @@ namespace ReadRealmBackend.BL.BookUsers
             return null;
         }
 
+        public async Task<GenericResponse<GenericPaginationResponse<UsersBookResponse>>> GetUsersBooksAsync(UsersBookPaginationRequest req, string userId)
+        {
+            if (!await _statusDAL.CheckStatusAsync(req.StatusId))
+            {
+                return new GenericResponse<GenericPaginationResponse<UsersBookResponse>>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No status with such id!" }
+                };
+            }
+
+            return new GenericResponse<GenericPaginationResponse<UsersBookResponse>>
+            {
+                Success = true,
+                Data = _mapper.Map<GenericPaginationResponse<UsersBookResponse>>(await _bookDAL.GetUsersBooksAsync(req, userId))
+            };
+        }
+
         public async Task<GenericResponse<string>> InsertBookUserAsync(InsertBookUserFullRequest req)
         {
             #region Validation
@@ -57,6 +77,15 @@ namespace ReadRealmBackend.BL.BookUsers
                 {
                     Success = false,
                     Errors = new List<string> { error }
+                };
+            }
+
+            if (await _bookUserDAL.CheckBookUserAsync(req.BookId, req.UserId))
+            {
+                return new GenericResponse<string>
+                {
+                    Success = false,
+                    Errors = new List<string> { "Book already tracked! Use the update method." }
                 };
             }
 

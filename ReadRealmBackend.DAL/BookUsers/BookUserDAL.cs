@@ -57,5 +57,10 @@ namespace ReadRealmBackend.DAL.BookUsers
         {
             return await _set.FirstOrDefaultAsync(bu => bu.UserId == userId && bu.BookId == bookId);
         }
+
+        public async Task<bool> CheckBookUserAsync(int bookId, string userId)
+        {
+            return await _set.AnyAsync(bu => bu.BookId == bookId && bu.UserId == userId);
+        }
     }
 }

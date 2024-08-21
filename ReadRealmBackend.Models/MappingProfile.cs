@@ -57,6 +57,16 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.FriendQuote, opt => opt.MapFrom(src => src.Notes.OrderByDescending(n => n.DatePosted).FirstOrDefault().Text))
                 .ReverseMap();
 
+            CreateMap<UsersBook, UsersBookResponse>()
+               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Book.Id))
+               .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Book.Title))
+               .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Book.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
+               .ForMember(dest => dest.ISBN, opt => opt.MapFrom(src => src.Book.Isbn))
+               .ForMember(dest => dest.CurrentChapter, opt => opt.MapFrom(src => src.BookUser.CurrentChapter))
+               .ForMember(dest => dest.ChapterCount, opt => opt.MapFrom(src => src.Book.ChapterCount))
+               .ReverseMap();
+            CreateMap<GenericPaginationResponse<UsersBook>, GenericPaginationResponse<UsersBookResponse>>().ReverseMap();
+
             #endregion
 
             #region Note
