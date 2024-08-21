@@ -1,6 +1,6 @@
 ﻿using ReadRealmBackend.Models.Responses.NoteTypes;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Requests.NoteTypes;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.NoteTypes
 {

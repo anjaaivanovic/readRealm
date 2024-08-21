@@ -1,5 +1,5 @@
-﻿using ReadRealmBackend.Models;
-using ReadRealmBackend.Models.Responses.Books;
+﻿using ReadRealmBackend.Models.Responses.Books;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.Home;
 
 namespace ReadRealmBackend.BL.Home

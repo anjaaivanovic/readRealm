@@ -36,6 +36,11 @@ namespace ReadRealmBackend.DAL.Base
             return await _set.ToListAsync();
         }
 
+        public async Task<int> GetTotalCountAsync()
+        {
+            return await _set.CountAsync();
+        }
+
         #endregion
 
         #region Insert

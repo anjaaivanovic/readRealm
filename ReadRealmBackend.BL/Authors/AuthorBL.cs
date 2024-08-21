@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.Authors;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Authors;
 using ReadRealmBackend.Models.Responses.Authors;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Authors
 {

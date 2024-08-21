@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.BookTypes;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.BookTypes;
 using ReadRealmBackend.Models.Responses.BookTypes;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.BookTypes
 {

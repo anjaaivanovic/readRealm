@@ -4,10 +4,10 @@ using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookTypes;
 using ReadRealmBackend.DAL.Genres;
 using ReadRealmBackend.DAL.Languages;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Responses.Books;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Books
 {
@@ -51,6 +51,22 @@ namespace ReadRealmBackend.BL.Books
                 Success = true
             };
         }
+
+        public async Task<GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>> GetBooksAsync(BookPaginationRequest req)
+        {
+            var data = new GenericPaginationResponse<RecommendedBookResponse>
+            {
+                Items = _mapper.Map<List<RecommendedBookResponse>>(await _bookDAL.GetBooksAsync(req)),
+                TotalItemCount = await _bookDAL.GetTotalCountAsync()
+            };
+
+            return new GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>
+            {
+                Data = data,
+                Success = true
+            };
+        }
+
 
         public async Task<GenericResponse<string>> InsertBookAsync(InsertBookRequest req)
         {

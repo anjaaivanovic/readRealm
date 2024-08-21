@@ -23,6 +23,12 @@ namespace ReadRealmBackend.API.Controllers
             return Ok(await _bookBL.GetBookAsync(id));
         }
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetBooksAsync([FromQuery]BookPaginationRequest req)
+        {
+            return Ok(await _bookBL.GetBooksAsync(req));
+        }
+
         #endregion
 
         #region POST

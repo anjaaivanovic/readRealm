@@ -1,6 +1,6 @@
-﻿using ReadRealmBackend.Models;
-using ReadRealmBackend.Models.Requests.Authors;
+﻿using ReadRealmBackend.Models.Requests.Authors;
 using ReadRealmBackend.Models.Responses.Authors;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Authors
 {

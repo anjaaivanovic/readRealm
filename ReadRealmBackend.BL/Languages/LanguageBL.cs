@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.Languages;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Languages;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.Languages;
 
 namespace ReadRealmBackend.BL.Languages

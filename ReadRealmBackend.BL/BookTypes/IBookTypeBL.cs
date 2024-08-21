@@ -1,6 +1,6 @@
 ﻿using ReadRealmBackend.Models.Requests.BookTypes;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Responses.BookTypes;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.BookTypes
 {

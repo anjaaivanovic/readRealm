@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReadRealmBackend.Common.Constants;
 using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Context;
 using ReadRealmBackend.Models.Entities;
+using ReadRealmBackend.Models.Requests.Books;
 
 namespace ReadRealmBackend.DAL.Books
 {
@@ -111,6 +114,80 @@ namespace ReadRealmBackend.DAL.Books
                 .Include(b => b.Genres)
                 .Include(b => b.BookUsers)
                 .Include(b => b.Notes)
+                .ToListAsync();
+        }
+
+        public async Task<List<Book>> GetBooksAsync(BookPaginationRequest req)
+        {
+            var query = _set.AsQueryable();
+
+            #region Filter
+
+            if (req.MinWordCount != null)
+            {
+                query = query.Where(book => book.WordCount >= req.MinWordCount);
+            }
+
+            if (req.MaxWordCount != null)
+            {
+                query = query.Where(book => book.WordCount <= req.MaxWordCount);
+            }
+
+            if (req.BookTypeId != null)
+            {
+                query = query.Where(book => book.TypeId == req.BookTypeId);
+            }
+
+            if (req.AuthorId != null)
+            {
+                query = query.Where(book => book.Authors.Any(author => author.Id == req.AuthorId));
+            }
+
+            if (req.GenreId != null)
+            {
+                query = query.Where(book => book.Genres.Any(genre => genre.Id == req.GenreId));
+            }
+
+            if (req.LanguageId != null)
+            {
+                query = query.Where(book => book.Languages.Any(language => language.Id == req.LanguageId));
+            }
+
+            #endregion
+
+            #region Search
+
+            if (req.Search != null)
+            {
+                query = query.Where(book => 
+                    book.Title.Contains(req.Search.Trim()) 
+                    || book.BriefDescription.Contains(req.Search.Trim())
+                );
+            }
+
+            #endregion
+
+            #region Sort
+
+            var property = typeof(Book).GetProperty(req.Sort);
+
+            if (property != null)
+            {
+                var parameter = Expression.Parameter(typeof(Book), "b");
+                var propertyAccess = Expression.Property(parameter, property);
+                var orderByExpression = Expression.Lambda<Func<Book, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
+
+                query = req.IsAsc
+                    ? query.OrderBy(orderByExpression)
+                    : query.OrderByDescending(orderByExpression);
+            }
+
+            #endregion
+
+            return await query
+                .Include(book => book.Genres)
+                .Skip((req.Page - 1) * req.ItemCount)
+                .Take(req.ItemCount)
                 .ToListAsync();
         }
 

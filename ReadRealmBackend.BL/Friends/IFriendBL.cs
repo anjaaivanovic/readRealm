@@ -1,5 +1,5 @@
 ﻿using ReadRealmBackend.Models.Entities;
-using ReadRealmBackend.Models;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Friends
 {

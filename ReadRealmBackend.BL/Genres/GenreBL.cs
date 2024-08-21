@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.Genres;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Genres;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.Genres;
 
 namespace ReadRealmBackend.BL.Genres

@@ -1,6 +1,6 @@
 ﻿using ReadRealmBackend.Models.Responses.Languages;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Requests.Languages;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Languages
 {

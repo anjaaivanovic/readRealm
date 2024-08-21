@@ -2,9 +2,9 @@
 using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.DAL.Statuses;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.BookUsers;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.BookUsers
 {
