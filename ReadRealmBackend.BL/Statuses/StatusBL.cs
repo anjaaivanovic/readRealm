@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.Statuses;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Statuses;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.Statuses;
 
 namespace ReadRealmBackend.BL.Statuses

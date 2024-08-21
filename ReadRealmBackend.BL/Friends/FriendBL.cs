@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.FriendRequests;
 using ReadRealmBackend.DAL.Friends;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Friends
 {

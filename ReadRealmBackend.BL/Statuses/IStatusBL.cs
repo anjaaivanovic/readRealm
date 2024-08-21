@@ -1,6 +1,6 @@
 ﻿using ReadRealmBackend.Models.Responses.Statuses;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Requests.Statuses;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Statuses
 {

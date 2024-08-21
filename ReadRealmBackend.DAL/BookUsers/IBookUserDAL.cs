@@ -10,5 +10,6 @@ namespace ReadRealmBackend.DAL.BookUsers
         Task<int> TotalBooksRatedAsync(string userId);
         Task<decimal?> AverageRatingAsync(string userId);
         Task<BookUser?> GetOneAsync(string userId, int bookId);
+        Task<bool> CheckBookUserAsync(int bookId, string userId);
     }
 }

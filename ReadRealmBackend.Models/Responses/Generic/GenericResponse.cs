@@ -1,4 +1,4 @@
-﻿namespace ReadRealmBackend.Models
+﻿namespace ReadRealmBackend.Models.Responses.Generic
 {
     public class GenericResponse<TEntity>
     {

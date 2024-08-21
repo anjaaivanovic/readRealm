@@ -5,9 +5,9 @@ using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.DAL.Notes;
 using ReadRealmBackend.DAL.NoteTypes;
 using ReadRealmBackend.DAL.Statuses;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Notes;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Notes
 {

@@ -4,10 +4,11 @@ using ReadRealmBackend.DAL.Books;
 using ReadRealmBackend.DAL.BookTypes;
 using ReadRealmBackend.DAL.Genres;
 using ReadRealmBackend.DAL.Languages;
-using ReadRealmBackend.Models;
+using ReadRealmBackend.DAL.Statuses;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Responses.Books;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Books
 {
@@ -18,9 +19,10 @@ namespace ReadRealmBackend.BL.Books
         private readonly IAuthorDAL _authorDAL;
         private readonly IGenreDAL _genreDAL;
         private readonly ILanguageDAL _languageDAL;
+        private readonly IStatusDAL _statusDAL;
         private readonly IMapper _mapper;
 
-        public BookBL(IBookDAL bookDAL, IMapper mapper, IBookTypeDAL bookTypeDAL, IGenreDAL genreDAL, ILanguageDAL languageDAL, IAuthorDAL authorDAL)
+        public BookBL(IBookDAL bookDAL, IMapper mapper, IBookTypeDAL bookTypeDAL, IGenreDAL genreDAL, ILanguageDAL languageDAL, IAuthorDAL authorDAL, IStatusDAL statusDAL)
         {
             _bookDAL = bookDAL;
             _mapper = mapper;
@@ -28,7 +30,10 @@ namespace ReadRealmBackend.BL.Books
             _genreDAL = genreDAL;
             _languageDAL = languageDAL;
             _authorDAL = authorDAL;
+            _statusDAL = statusDAL;
         }
+
+        #region Get
 
         public async Task<GenericResponse<BookResponse?>> GetBookAsync(int id)
         {
@@ -51,6 +56,19 @@ namespace ReadRealmBackend.BL.Books
                 Success = true
             };
         }
+
+        public async Task<GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>> GetBooksAsync(BookPaginationRequest req)
+        {
+            return new GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>
+            {
+                Data = _mapper.Map<GenericPaginationResponse<RecommendedBookResponse>>(await _bookDAL.GetBooksAsync(req)),
+                Success = true
+            };
+        }
+
+        #endregion
+
+        #region Insert
 
         public async Task<GenericResponse<string>> InsertBookAsync(InsertBookRequest req)
         {
@@ -135,6 +153,10 @@ namespace ReadRealmBackend.BL.Books
             };
         }
 
+        #endregion
+
+        #region Delete
+
         public async Task<GenericResponse<string>> DeleteBookAsync(int id)
         {
             var toDelete = await _bookDAL.GetOneAsync(id);
@@ -166,5 +188,7 @@ namespace ReadRealmBackend.BL.Books
                 Errors = new List<string> { "Changes could not be saved!" }
             };
         }
+
+        #endregion
     }
 }

@@ -1,5 +1,5 @@
-﻿using ReadRealmBackend.Models;
-using ReadRealmBackend.Models.Requests.Notes;
+﻿using ReadRealmBackend.Models.Requests.Notes;
+using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.BL.Notes
 {

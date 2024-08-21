@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ReadRealmBackend.DAL.NoteTypes;
-using ReadRealmBackend.Models;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.NoteTypes;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.NoteTypes;
 
 namespace ReadRealmBackend.BL.NoteTypes

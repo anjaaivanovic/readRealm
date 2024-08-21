@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReadRealmBackend.BL.BookUsers;
 using ReadRealmBackend.BL.Notes;
 using ReadRealmBackend.Models.Requests.BookAuthors;
+using ReadRealmBackend.Models.Requests.Books;
 using ReadRealmBackend.Models.Requests.BookUsers;
 using ReadRealmBackend.Models.Requests.Notes;
 
@@ -17,6 +18,13 @@ namespace ReadRealmBackend.API.Controllers
         private readonly IBookUserBL _bookUserBL;
         private readonly INoteBL _noteBL;
         private readonly IMapper _mapper;
+
+        [HttpGet("booksByStatus")]
+        public async Task<IActionResult> GetBooksAsync([FromQuery] UsersBookPaginationRequest req)
+        {
+            var userId = HttpContext.Items["userId"] as string ?? string.Empty;
+            return Ok(await _bookUserBL.GetUsersBooksAsync(req, userId));
+        }
 
         public BookTrackingController(IBookUserBL bookUserBL, INoteBL noteBL, IMapper mapper)
         {

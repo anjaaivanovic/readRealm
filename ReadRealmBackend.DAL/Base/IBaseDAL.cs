@@ -4,6 +4,7 @@
     {
         Task<TEntity?> GetOneAsync(int id);
         Task<List<TEntity>> GetAllAsync();
+        Task<int> GetTotalCountAsync();
         Task InsertOneAsync(TEntity entity);
         Task InsertMultipleAsync(List<TEntity> entities);
         void UpdateOne(TEntity entity);

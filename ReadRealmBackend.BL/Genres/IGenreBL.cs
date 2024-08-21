@@ -1,5 +1,5 @@
-﻿using ReadRealmBackend.Models;
-using ReadRealmBackend.Models.Requests.Genres;
+﻿using ReadRealmBackend.Models.Requests.Genres;
+using ReadRealmBackend.Models.Responses.Generic;
 using ReadRealmBackend.Models.Responses.Genres;
 
 namespace ReadRealmBackend.BL.Genres
