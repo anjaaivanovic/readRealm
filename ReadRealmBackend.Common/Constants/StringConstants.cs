@@ -12,5 +12,6 @@
 
         public static string PublicVisibility = "Public";
         public static string PrivateVisibility = "Private";
+        public static string SharedVisibility = "Shared";
     }
 }

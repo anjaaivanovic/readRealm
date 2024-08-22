@@ -12,10 +12,8 @@ namespace ReadRealmBackend.Models.Requests.Generic
         [Range(0, int.MaxValue)]
         public int ItemCount { get; set; }
 
-        [Required]
-        public string Sort { get; set; }
+        public string? Sort { get; set; }
 
-        [Required]
-        public bool IsAsc { get; set; }
+        public bool? IsAsc { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace ReadRealmBackend.DAL.Books
 {
     public interface IBookDAL: IBaseDAL<Book>
     {
+        Task<bool> CheckBookAsync(int id);
         Task<Book?> GetBookAsync(int id, string userId);
         Task<List<Book>> GetContinueReadingBooksAsync(string userId);
         Task<List<Book>> GetRecommendedBooksAsync(string userId);

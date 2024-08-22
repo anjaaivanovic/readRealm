@@ -75,6 +75,7 @@ namespace ReadRealmBackend.Common
             CreateMap<Note, NoteResponse>()
                 .ForMember(dest => dest.Visibility, opt => opt.MapFrom(src => src.NoteVisibility.Name))
                 .ReverseMap();
+            CreateMap<GenericPaginationResponse<Note>, GenericPaginationResponse<NoteResponse>>().ReverseMap();
             CreateMap<InsertNoteRequest, InsertNoteFullRequest>().ReverseMap();
             CreateMap<Note, InsertNoteFullRequest>()
                 .ForMember(dest => dest.DatePosted, opt => opt.MapFrom(src => src.DatePosted.ToDateTime(new TimeOnly(0, 0))))
