@@ -29,5 +29,7 @@ namespace ReadRealmBackend.Models.Responses.Books
         public List<string> Genres { get; set; }
 
         public List<string> Languages { get; set; }
+        public decimal Rating { get; set; }
+        public List<NoteResponse> FinalThoughts { get; set; }
     }
 }

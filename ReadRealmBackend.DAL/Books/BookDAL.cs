@@ -6,7 +6,6 @@ using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Context;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
-using ReadRealmBackend.Models.Responses.Books;
 using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.DAL.Books
@@ -14,6 +13,7 @@ namespace ReadRealmBackend.DAL.Books
     public class BookDAL : BaseDAL<Book>, IBookDAL
     {
         private static int recommendationCount = 6;
+        private static int noteCount = 10;
 
         public BookDAL(ReadRealmContext context) : base(context)
         {
@@ -21,16 +21,45 @@ namespace ReadRealmBackend.DAL.Books
 
         #region Get
 
-        public async Task<Book?> GetBookAsync(int id)
+        public async Task<Book?> GetBookAsync(int id, string userId)
         {
-            return await _set
+            var publicVisibilityId = (await _context.NoteVisibilities.FirstOrDefaultAsync(n => n.Name == StringConstants.PublicVisibility)).Id;
+            var privateVisibilityId = (await _context.NoteVisibilities.FirstOrDefaultAsync(n => n.Name == StringConstants.PrivateVisibility)).Id;
+            var finalThoughtsTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.FinalNoteType)).Id;
+
+            var bookHelper = await _context.Books
+                .Where(b => b.Id == id)
                 .Include(b => b.BookUsers)
-                .Include(b => b.Notes)
                 .Include(b => b.Type)
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
                 .Include(b => b.Languages)
-                .FirstOrDefaultAsync(book => book.Id == id);
+                .Select(b => new
+                {
+                    Book = b,
+                    Notes = b.Notes
+                        .Where(n => n.UserId == userId
+                        && n.NoteVisibilityId == privateVisibilityId
+                        )
+                        .OrderByDescending(n => n.DatePosted)
+                        .Take(noteCount),
+                    FinalThoughts = b.Notes
+                        .Where(n => n.NoteVisibilityId == publicVisibilityId
+                            && n.TypeId == finalThoughtsTypeId
+                        )
+                        .OrderByDescending(n => n.DatePosted)
+                        .Take(10)
+                })
+                .FirstOrDefaultAsync();
+
+            bookHelper.Book.Notes = bookHelper.Notes.ToList();
+            bookHelper.Book.FinalThoughts = bookHelper.FinalThoughts.ToList();
+
+            bookHelper.Book.Rating = await _context.BookUsers
+                .Where(bu => bu.BookId == id)
+                .SumAsync(bu => bu.Rating) ?? 0;
+
+            return bookHelper.Book;
         }
 
         public async Task<List<Book>> GetContinueReadingBooksAsync(string userId)

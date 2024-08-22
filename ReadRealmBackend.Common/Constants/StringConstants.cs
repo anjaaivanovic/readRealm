@@ -9,5 +9,8 @@
 
         public static string ReadStatus = "Read";
         public static string ReadingStatus = "Reading";
+
+        public static string PublicVisibility = "Public";
+        public static string PrivateVisibility = "Private";
     }
 }

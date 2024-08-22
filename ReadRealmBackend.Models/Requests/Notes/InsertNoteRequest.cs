@@ -18,7 +18,7 @@ namespace ReadRealmBackend.Models.Requests.Notes
         public string Text { get; set; }
 
         [Required]
-        public bool Private { get; set; }
+        public int Visibility { get; set; }
 
         [Required]
         public int TypeId { get; set; }

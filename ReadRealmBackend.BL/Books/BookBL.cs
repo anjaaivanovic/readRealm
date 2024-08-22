@@ -35,9 +35,9 @@ namespace ReadRealmBackend.BL.Books
 
         #region Get
 
-        public async Task<GenericResponse<BookResponse?>> GetBookAsync(int id)
+        public async Task<GenericResponse<BookResponse?>> GetBookAsync(int id, string userId)
         {
-            var book = await _bookDAL.GetBookAsync(id);
+            var book = await _bookDAL.GetBookAsync(id, userId);
 
             if (book == null)
             {

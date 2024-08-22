@@ -6,7 +6,7 @@ namespace ReadRealmBackend.BL.Books
 {
     public interface IBookBL
     {
-        Task<GenericResponse<BookResponse?>> GetBookAsync(int id);
+        Task<GenericResponse<BookResponse?>> GetBookAsync(int id, string userId);
         Task<GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>> GetBooksAsync(BookPaginationRequest req);
         Task<GenericResponse<string>> InsertBookAsync(InsertBookRequest req);
         Task<GenericResponse<string>> DeleteBookAsync(int id);
