@@ -67,6 +67,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[NoteVisibilities]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Statuses]",
          "ObjectType": 0
       }

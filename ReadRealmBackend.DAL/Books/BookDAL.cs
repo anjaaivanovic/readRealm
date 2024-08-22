@@ -96,26 +96,22 @@ namespace ReadRealmBackend.DAL.Books
                 .Distinct()
                 .ToList();
 
-            var usersBooks = await _context.BookUsers
-                .Where(bu => bu.UserId == userId)
-                .Select(bu => bu.BookId)
-                .ToListAsync();
-
-            var currentThoughtsTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.CurrentThoughtsType)).Id;
+            var spoilerFreeTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.SpoilerFree)).Id;
+            var currentlyReadingStatusId = (await _context.Statuses.FirstOrDefaultAsync(n => n.Name == StringConstants.ReadingStatus)).Id;
 
             return await _context.BookUsers
-                .Where(bu => !usersBooks.Contains(bu.BookId) && friendIds.Contains(bu.UserId))
+                .Where(bu => friendIds.Contains(bu.UserId) && bu.StatusId == currentlyReadingStatusId)
                 .Join(_set,
                       bu => bu.BookId,
                       b => b.Id,
                       (bu, b) => b)
-                .Where(b => b.Notes.Any(n => n.TypeId == currentThoughtsTypeId && n.BookId == b.Id))
                 .Distinct()
                 .Take(recommendationCount)
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
                 .Include(b => b.BookUsers)
-                .Include(b => b.Notes)
+                .Include(b => b.Notes.Where(n => n.TypeId == spoilerFreeTypeId))
+                .ThenInclude(n => n.NoteVisibility)
                 .ToListAsync();
         }
 

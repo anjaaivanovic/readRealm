@@ -17,11 +17,13 @@ public partial class Note
 
     public string Text { get; set; }
 
-    public bool Private { get; set; }
-
     public int TypeId { get; set; }
 
+    public byte NoteVisibilityId { get; set; }
+
     public virtual Book Book { get; set; }
+
+    public virtual NoteVisibility NoteVisibility { get; set; }
 
     public virtual NoteType Type { get; set; }
 }

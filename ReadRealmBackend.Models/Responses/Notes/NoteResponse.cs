@@ -12,7 +12,7 @@
 
         public string Text { get; set; }
 
-        public bool Private { get; set; }
+        public string Visibility { get; set; }
 
         public int TypeId { get; set; }
 
