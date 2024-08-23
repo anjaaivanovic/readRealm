@@ -226,6 +226,9 @@ namespace ReadRealmBackend.DAL.Books
 
             if (req.Mutual != null && (bool)req.Mutual)
             {
+                var readingStatusId = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadingStatus)).Id;
+                var readStatusId = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadStatus)).Id;
+
                 var friendIds = await _context.Friends
                    .Where(f => f.FirstUserId == userId || f.SecondUserId == userId)
                    .Select(f => f.FirstUserId == userId ? f.SecondUserId : f.FirstUserId)
@@ -233,7 +236,7 @@ namespace ReadRealmBackend.DAL.Books
                    .ToListAsync();
 
                 var userBooks = await _context.BookUsers
-                    .Where(bu => bu.UserId == userId)
+                    .Where(bu => bu.UserId == userId && bu.StatusId == readingStatusId)
                     .Select(bu => bu.BookId)
                     .ToListAsync();
 
@@ -247,7 +250,9 @@ namespace ReadRealmBackend.DAL.Books
                           b => b.Id,
                           bu => bu.BookId,
                           (b, bu) => new { Book = b, BookUser = bu })
-                    .Where(ub => friendIds.Contains(ub.BookUser.UserId))
+                    .Where(ub => friendIds.Contains(ub.BookUser.UserId)
+                    && (ub.BookUser.StatusId == readingStatusId || ub.BookUser.StatusId == readStatusId)
+                    )
                     .GroupBy(ub => ub.Book)
                     .Select(g => new
                     {
