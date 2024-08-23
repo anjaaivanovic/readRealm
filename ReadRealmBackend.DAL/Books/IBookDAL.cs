@@ -12,7 +12,7 @@ namespace ReadRealmBackend.DAL.Books
         Task<List<Book>> GetContinueReadingBooksAsync(string userId);
         Task<List<Book>> GetRecommendedBooksAsync(string userId);
         Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(string userId);
-        Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req);
+        Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req, string userId);
         Task<GenericPaginationResponse<UsersBook>> GetUsersBooksAsync(UsersBookPaginationRequest req, string userId);
     }
 }

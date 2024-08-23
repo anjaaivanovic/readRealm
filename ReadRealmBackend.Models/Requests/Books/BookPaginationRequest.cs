@@ -11,5 +11,6 @@ namespace ReadRealmBackend.Models.Requests.Books
         public int? BookTypeId { get; set; }
         public int? MaxWordCount { get; set; }
         public int? MinWordCount { get; set; }
+        public bool? Mutual { get; set; }
     }
 }

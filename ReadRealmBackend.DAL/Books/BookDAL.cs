@@ -125,14 +125,11 @@ namespace ReadRealmBackend.DAL.Books
 
         public async Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(string userId)
         {
-            var friends = await _context.Friends
+            var friendIds = await _context.Friends
                 .Where(f => f.FirstUserId == userId || f.SecondUserId == userId)
-                .ToListAsync();
-
-            var friendIds = friends
                 .Select(f => f.FirstUserId == userId ? f.SecondUserId : f.FirstUserId)
                 .Distinct()
-                .ToList();
+                .ToListAsync();
 
             var spoilerFreeTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.SpoilerFree)).Id;
             var currentlyReadingStatusId = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadingStatus)).Id;
@@ -154,9 +151,9 @@ namespace ReadRealmBackend.DAL.Books
                 .ToListAsync();
         }
 
-        public async Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req)
+        public async Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req, string userId)
         {
-            var query = _set.AsQueryable();
+            var query = _set.Include(b => b.Genres).AsQueryable();
 
             #region Filter
 
@@ -221,6 +218,59 @@ namespace ReadRealmBackend.DAL.Books
                         ? query.OrderBy(orderByExpression)
                         : query.OrderByDescending(orderByExpression);
                 }
+            }
+
+            #endregion
+
+            #region Mutual
+
+            if (req.Mutual != null && (bool)req.Mutual)
+            {
+                var friendIds = await _context.Friends
+                   .Where(f => f.FirstUserId == userId || f.SecondUserId == userId)
+                   .Select(f => f.FirstUserId == userId ? f.SecondUserId : f.FirstUserId)
+                   .Distinct()
+                   .ToListAsync();
+
+                var userBooks = await _context.BookUsers
+                    .Where(bu => bu.UserId == userId)
+                    .Select(bu => bu.BookId)
+                    .ToListAsync();
+
+                var booksWithGenres = await query
+                    .Include(b => b.Genres)
+                    .Where(b => userBooks.Contains(b.Id))
+                    .ToListAsync();
+
+                var mutualBooksQuery = booksWithGenres
+                    .Join(_context.BookUsers,
+                          b => b.Id,
+                          bu => bu.BookId,
+                          (b, bu) => new { Book = b, BookUser = bu })
+                    .Where(ub => friendIds.Contains(ub.BookUser.UserId))
+                    .GroupBy(ub => ub.Book)
+                    .Select(g => new
+                    {
+                        Book = g.Key,
+                        BookUsers = g.Select(ub => ub.BookUser.UserId).Distinct().Where(uid => uid != userId).ToList()
+                    });
+
+                var booksWithUsers = mutualBooksQuery
+                    .Skip((req.Page - 1) * req.ItemCount)
+                    .Take(req.ItemCount)
+                    .ToList();
+
+                var books = booksWithUsers.Select(bwu =>
+                {
+                    bwu.Book.BookUsers = bwu.BookUsers.Select(userId => new BookUser { UserId = userId }).ToList();
+                    return bwu.Book;
+                }).ToList();
+
+                return new GenericPaginationResponse<Book>
+                {
+                    Items = books,
+                    TotalItemCount = mutualBooksQuery.Count()
+                };
             }
 
             #endregion

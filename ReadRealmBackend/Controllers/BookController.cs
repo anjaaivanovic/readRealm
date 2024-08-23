@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReadRealmBackend.BL.Books;
 using ReadRealmBackend.Models.Requests.Books;
-using ReadRealmBackend.Models.Requests.BookUsers;
 
 namespace ReadRealmBackend.API.Controllers
 {
@@ -32,7 +31,15 @@ namespace ReadRealmBackend.API.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetBooksAsync([FromQuery]BookPaginationRequest req)
         {
-            return Ok(await _bookBL.GetBooksAsync(req));
+            var userId = HttpContext.Items["userId"] as string;
+            return Ok(await _bookBL.GetBooksAsync(req, userId));
+        }
+
+        [HttpGet("mutual")]
+        public async Task<IActionResult> GetMutualBooksAsync([FromQuery] BookPaginationRequest req)
+        {
+            var userId = HttpContext.Items["userId"] as string;
+            return Ok(await _bookBL.GetMutualBooksAsync(req, userId));
         }
 
         #endregion
