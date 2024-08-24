@@ -72,6 +72,7 @@ namespace ReadRealmBackend.Common
             CreateMap<Book, MutualBookResponse>()
                  .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
                  .ForMember(dest => dest.UserIds, opt => opt.MapFrom(src => src.BookUsers.Select(bu => bu.UserId).ToList()))
+                 .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
                  .ReverseMap();
             CreateMap<GenericPaginationResponse<Book>, GenericPaginationResponse<MutualBookResponse>>().ReverseMap();
 
