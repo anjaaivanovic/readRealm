@@ -1,7 +1,7 @@
 # Read Realm - Backend
 
 ## Introduction
-This application is designed to enhance the reading experience by enabling users to track their progress, make notes, and share insights with friends—all while staying spoiler-free. This repository contains the backend logic of the application.
+This application is designed to enhance the reading experience by enabling users to track their progress, make notes, and share insights with friends — all while staying spoiler-free. This repository contains the backend logic of the application.
 
 ### Key Features:
 
