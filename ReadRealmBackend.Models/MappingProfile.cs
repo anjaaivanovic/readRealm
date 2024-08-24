@@ -55,6 +55,7 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
                 .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().Rating))
                 .ForMember(dest => dest.FriendQuote, opt => opt.MapFrom(src => src.Notes.OrderByDescending(n => n.DatePosted).FirstOrDefault().Text))
+                .ForMember(dest => dest.Friend, opt => opt.MapFrom(src => src.BookUsers.FirstOrDefault().UserId))
                 .ReverseMap();
 
             CreateMap<UsersBook, UsersBookResponse>()
@@ -67,11 +68,20 @@ namespace ReadRealmBackend.Common
                .ReverseMap();
             CreateMap<GenericPaginationResponse<UsersBook>, GenericPaginationResponse<UsersBookResponse>>().ReverseMap();
 
+            CreateMap<Book, MutualBookResponse>()
+                 .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
+                 .ForMember(dest => dest.UserIds, opt => opt.MapFrom(src => src.BookUsers.Select(bu => bu.UserId).ToList()))
+                 .ReverseMap();
+            CreateMap<GenericPaginationResponse<Book>, GenericPaginationResponse<MutualBookResponse>>().ReverseMap();
+
             #endregion
 
             #region Note
 
-            CreateMap<Note, NoteResponse>().ReverseMap();
+            CreateMap<Note, NoteResponse>()
+                .ForMember(dest => dest.Visibility, opt => opt.MapFrom(src => src.NoteVisibility.Name))
+                .ReverseMap();
+            CreateMap<GenericPaginationResponse<Note>, GenericPaginationResponse<NoteResponse>>().ReverseMap();
             CreateMap<InsertNoteRequest, InsertNoteFullRequest>().ReverseMap();
             CreateMap<Note, InsertNoteFullRequest>()
                 .ForMember(dest => dest.DatePosted, opt => opt.MapFrom(src => src.DatePosted.ToDateTime(new TimeOnly(0, 0))))

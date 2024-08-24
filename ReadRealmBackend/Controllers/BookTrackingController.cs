@@ -33,20 +33,25 @@ namespace ReadRealmBackend.API.Controllers
             _mapper = mapper;
         }
 
+        #region GET
+
+        [HttpGet("notes")]
+        public async Task<IActionResult> GetBookNotesAsync([FromQuery]BookNotePaginationRequest req)
+        {
+            var userId = HttpContext.Items["userId"] as string;
+            return Ok(await _noteBL.GetBookNotesAsync(req, userId));
+        }
+
+        #endregion
+
+        #region POST
+
         [HttpPost]
         public async Task<IActionResult> InsertBookUserAsync(InsertBookUserRequest req)
         {
             var mappedReq = _mapper.Map<InsertBookUserFullRequest>(req);
             mappedReq.UserId = HttpContext.Items["userId"] as string;
             return Ok(await _bookUserBL.InsertBookUserAsync(mappedReq));
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateBookUserAsync(InsertBookUserRequest req)
-        {
-            var mappedReq = _mapper.Map<InsertBookUserFullRequest>(req);
-            mappedReq.UserId = HttpContext.Items["userId"] as string;
-            return Ok(await _bookUserBL.UpdateBookUserAsync(mappedReq));
         }
 
         [HttpPost("note")]
@@ -56,5 +61,19 @@ namespace ReadRealmBackend.API.Controllers
             mappedReq.UserId = HttpContext.Items["userId"] as string;
             return Ok(await _noteBL.InsertNoteAsync(mappedReq));
         }
+
+        #endregion
+
+        #region PUT
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateBookUserAsync(InsertBookUserRequest req)
+        {
+            var mappedReq = _mapper.Map<InsertBookUserFullRequest>(req);
+            mappedReq.UserId = HttpContext.Items["userId"] as string;
+            return Ok(await _bookUserBL.UpdateBookUserAsync(mappedReq));
+        }
+
+        #endregion
     }
 }

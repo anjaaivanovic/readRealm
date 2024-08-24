@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
-using ReadRealmBackend.BL.NoteTypes;
 using ReadRealmBackend.DAL.Books;
-using ReadRealmBackend.DAL.BookUsers;
 using ReadRealmBackend.DAL.Notes;
 using ReadRealmBackend.DAL.NoteTypes;
-using ReadRealmBackend.DAL.Statuses;
+using ReadRealmBackend.DAL.NoteVisibilities;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Notes;
 using ReadRealmBackend.Models.Responses.Generic;
+using ReadRealmBackend.Models.Responses.Notes;
 
 namespace ReadRealmBackend.BL.Notes
 {
@@ -16,14 +15,43 @@ namespace ReadRealmBackend.BL.Notes
         private readonly INoteDAL _noteDAL;
         private readonly IBookDAL _bookDAL;
         private readonly INoteTypeDAL _noteTypeDAL;
+        private readonly INoteVisibilityDAL _noteVisibilityDAL;
         private readonly IMapper _mapper;
 
-        public NoteBL(INoteDAL noteDAL, IBookDAL bookDAL, IMapper mapper, INoteTypeDAL noteTypeDAL)
+        public NoteBL(INoteDAL noteDAL, IBookDAL bookDAL, IMapper mapper, INoteTypeDAL noteTypeDAL, INoteVisibilityDAL noteVisibilityDAL)
         {
             _noteDAL = noteDAL;
             _bookDAL = bookDAL;
             _mapper = mapper;
             _noteTypeDAL = noteTypeDAL;
+            _noteVisibilityDAL = noteVisibilityDAL;
+        }
+
+        public async Task<GenericResponse<GenericPaginationResponse<NoteResponse>>> GetBookNotesAsync(BookNotePaginationRequest req, string userId)
+        {
+            if (!await _bookDAL.CheckBookAsync(req.BookId))
+            {
+                return new GenericResponse<GenericPaginationResponse<NoteResponse>>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No book wih such id!" }
+                };
+            }
+
+            if (!await _noteVisibilityDAL.CheckNoteVisibilityAsync(req.Visibility))
+            {
+                return new GenericResponse<GenericPaginationResponse<NoteResponse>>
+                {
+                    Success = false,
+                    Errors = new List<string> { "No visibility type wih such id!" }
+                };
+            }
+
+            return new GenericResponse<GenericPaginationResponse<NoteResponse>>
+            {
+                Success = true,
+                Data = _mapper.Map<GenericPaginationResponse<NoteResponse>>(await _noteDAL.GetBookNotesAsync(req, userId))
+            };
         }
 
         public async Task<GenericResponse<string>> InsertNoteAsync(InsertNoteFullRequest req)

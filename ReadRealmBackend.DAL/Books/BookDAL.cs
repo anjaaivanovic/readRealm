@@ -6,7 +6,6 @@ using ReadRealmBackend.DAL.Base;
 using ReadRealmBackend.Models.Context;
 using ReadRealmBackend.Models.Entities;
 using ReadRealmBackend.Models.Requests.Books;
-using ReadRealmBackend.Models.Responses.Books;
 using ReadRealmBackend.Models.Responses.Generic;
 
 namespace ReadRealmBackend.DAL.Books
@@ -14,23 +13,62 @@ namespace ReadRealmBackend.DAL.Books
     public class BookDAL : BaseDAL<Book>, IBookDAL
     {
         private static int recommendationCount = 6;
+        private static int noteCount = 10;
 
         public BookDAL(ReadRealmContext context) : base(context)
         {
         }
 
+        #region Check
+
+        public async Task<bool> CheckBookAsync(int id)
+        {
+            return await _set.AnyAsync(book => book.Id == id);
+        }
+
+        #endregion
+
         #region Get
 
-        public async Task<Book?> GetBookAsync(int id)
+        public async Task<Book?> GetBookAsync(int id, string userId)
         {
-            return await _set
+            var publicVisibilityId = (await _context.NoteVisibilities.FirstOrDefaultAsync(n => n.Name == StringConstants.PublicVisibility)).Id;
+            var privateVisibilityId = (await _context.NoteVisibilities.FirstOrDefaultAsync(n => n.Name == StringConstants.PrivateVisibility)).Id;
+            var finalThoughtsTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.FinalNoteType)).Id;
+
+            var bookHelper = await _context.Books
+                .Where(b => b.Id == id)
                 .Include(b => b.BookUsers)
-                .Include(b => b.Notes)
                 .Include(b => b.Type)
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
                 .Include(b => b.Languages)
-                .FirstOrDefaultAsync(book => book.Id == id);
+                .Select(b => new
+                {
+                    Book = b,
+                    Notes = b.Notes
+                        .Where(n => n.UserId == userId
+                        && n.NoteVisibilityId == privateVisibilityId
+                        )
+                        .OrderBy(n => n.Chapter)
+                        .Take(noteCount),
+                    FinalThoughts = b.Notes
+                        .Where(n => n.NoteVisibilityId == publicVisibilityId
+                            && n.TypeId == finalThoughtsTypeId
+                        )
+                        .OrderByDescending(n => n.DatePosted)
+                        .Take(10)
+                })
+                .FirstOrDefaultAsync();
+
+            bookHelper.Book.Notes = bookHelper.Notes.ToList();
+            bookHelper.Book.FinalThoughts = bookHelper.FinalThoughts.ToList();
+
+            bookHelper.Book.Rating = await _context.BookUsers
+                .Where(bu => bu.BookId == id)
+                .SumAsync(bu => bu.Rating) ?? 0;
+
+            return bookHelper.Book;
         }
 
         public async Task<List<Book>> GetContinueReadingBooksAsync(string userId)
@@ -87,41 +125,35 @@ namespace ReadRealmBackend.DAL.Books
 
         public async Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(string userId)
         {
-            var friends = await _context.Friends
+            var friendIds = await _context.Friends
                 .Where(f => f.FirstUserId == userId || f.SecondUserId == userId)
-                .ToListAsync();
-
-            var friendIds = friends
                 .Select(f => f.FirstUserId == userId ? f.SecondUserId : f.FirstUserId)
                 .Distinct()
-                .ToList();
-
-            var usersBooks = await _context.BookUsers
-                .Where(bu => bu.UserId == userId)
-                .Select(bu => bu.BookId)
                 .ToListAsync();
 
-            var currentThoughtsTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.CurrentThoughtsType)).Id;
+            var spoilerFreeTypeId = (await _context.NoteTypes.FirstOrDefaultAsync(n => n.Name == StringConstants.SpoilerFree)).Id;
+            var currentlyReadingStatusId = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadingStatus)).Id;
+            var privateVisibilityId = (await _context.NoteVisibilities.FirstOrDefaultAsync(nv => nv.Name == StringConstants.PrivateVisibility)).Id;
 
             return await _context.BookUsers
-                .Where(bu => !usersBooks.Contains(bu.BookId) && friendIds.Contains(bu.UserId))
+                .Where(bu => friendIds.Contains(bu.UserId) && bu.StatusId == currentlyReadingStatusId)
                 .Join(_set,
                       bu => bu.BookId,
                       b => b.Id,
                       (bu, b) => b)
-                .Where(b => b.Notes.Any(n => n.TypeId == currentThoughtsTypeId && n.BookId == b.Id))
                 .Distinct()
                 .Take(recommendationCount)
                 .Include(b => b.Authors)
                 .Include(b => b.Genres)
                 .Include(b => b.BookUsers)
-                .Include(b => b.Notes)
+                .Include(b => b.Notes.Where(n => n.TypeId == spoilerFreeTypeId && n.NoteVisibilityId != privateVisibilityId))
+                .ThenInclude(n => n.NoteVisibility)
                 .ToListAsync();
         }
 
-        public async Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req)
+        public async Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req, string userId)
         {
-            var query = _set.AsQueryable();
+            var query = _set.Include(b => b.Genres).AsQueryable();
 
             #region Filter
 
@@ -171,17 +203,79 @@ namespace ReadRealmBackend.DAL.Books
 
             #region Sort
 
-            var property = typeof(Book).GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(req.Sort));
-
-            if (property != null)
+            if (req.Sort != null && req.IsAsc != null)
             {
-                var parameter = Expression.Parameter(typeof(Book), "b");
-                var propertyAccess = Expression.Property(parameter, property);
-                var orderByExpression = Expression.Lambda<Func<Book, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
 
-                query = req.IsAsc
-                    ? query.OrderBy(orderByExpression)
-                    : query.OrderByDescending(orderByExpression);
+                var property = typeof(Book).GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(req.Sort));
+
+                if (property != null)
+                {
+                    var parameter = Expression.Parameter(typeof(Book), "b");
+                    var propertyAccess = Expression.Property(parameter, property);
+                    var orderByExpression = Expression.Lambda<Func<Book, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
+
+                    query = (bool)req.IsAsc
+                        ? query.OrderBy(orderByExpression)
+                        : query.OrderByDescending(orderByExpression);
+                }
+            }
+
+            #endregion
+
+            #region Mutual
+
+            if (req.Mutual != null && (bool)req.Mutual)
+            {
+                var readingStatusId = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadingStatus)).Id;
+                var readStatusId = (await _context.Statuses.FirstOrDefaultAsync(s => s.Name == StringConstants.ReadStatus)).Id;
+
+                var friendIds = await _context.Friends
+                   .Where(f => f.FirstUserId == userId || f.SecondUserId == userId)
+                   .Select(f => f.FirstUserId == userId ? f.SecondUserId : f.FirstUserId)
+                   .Distinct()
+                   .ToListAsync();
+
+                var userBooks = await _context.BookUsers
+                    .Where(bu => bu.UserId == userId && bu.StatusId == readingStatusId)
+                    .Select(bu => bu.BookId)
+                    .ToListAsync();
+
+                var booksWithGenres = await query
+                    .Include(b => b.Genres)
+                    .Where(b => userBooks.Contains(b.Id))
+                    .ToListAsync();
+
+                var mutualBooksQuery = booksWithGenres
+                    .Join(_context.BookUsers,
+                          b => b.Id,
+                          bu => bu.BookId,
+                          (b, bu) => new { Book = b, BookUser = bu })
+                    .Where(ub => friendIds.Contains(ub.BookUser.UserId)
+                    && (ub.BookUser.StatusId == readingStatusId || ub.BookUser.StatusId == readStatusId)
+                    )
+                    .GroupBy(ub => ub.Book)
+                    .Select(g => new
+                    {
+                        Book = g.Key,
+                        BookUsers = g.Select(ub => ub.BookUser.UserId).Distinct().Where(uid => uid != userId).ToList()
+                    });
+
+                var booksWithUsers = mutualBooksQuery
+                    .Skip((req.Page - 1) * req.ItemCount)
+                    .Take(req.ItemCount)
+                    .ToList();
+
+                var books = booksWithUsers.Select(bwu =>
+                {
+                    bwu.Book.BookUsers = bwu.BookUsers.Select(userId => new BookUser { UserId = userId }).ToList();
+                    return bwu.Book;
+                }).ToList();
+
+                return new GenericPaginationResponse<Book>
+                {
+                    Items = books,
+                    TotalItemCount = mutualBooksQuery.Count()
+                };
             }
 
             #endregion
@@ -211,17 +305,20 @@ namespace ReadRealmBackend.DAL.Books
 
             #region Sort
 
-            var property = typeof(Book).GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(req.Sort));
-
-            if (property != null)
+            if (req.Sort != null && req.IsAsc != null)
             {
-                var parameter = Expression.Parameter(typeof(UsersBook), "b");
-                var propertyAccess = Expression.Property(Expression.Property(parameter, nameof(UsersBook.Book)), property);
-                var orderByExpression = Expression.Lambda<Func<UsersBook, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
+                var property = typeof(Book).GetProperty(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(req.Sort));
 
-                query = req.IsAsc
-                    ? query.OrderBy(orderByExpression)
-                    : query.OrderByDescending(orderByExpression);
+                if (property != null)
+                {
+                    var parameter = Expression.Parameter(typeof(UsersBook), "b");
+                    var propertyAccess = Expression.Property(Expression.Property(parameter, nameof(UsersBook.Book)), property);
+                    var orderByExpression = Expression.Lambda<Func<UsersBook, object>>(Expression.Convert(propertyAccess, typeof(object)), parameter);
+
+                    query = (bool)req.IsAsc
+                        ? query.OrderBy(orderByExpression)
+                        : query.OrderByDescending(orderByExpression);
+                }
             }
 
             #endregion

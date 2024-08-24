@@ -34,6 +34,8 @@ public partial class ReadRealmContext : DbContext
 
     public virtual DbSet<NoteType> NoteTypes { get; set; }
 
+    public virtual DbSet<NoteVisibility> NoteVisibilities { get; set; }
+
     public virtual DbSet<Status> Statuses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -210,6 +212,7 @@ public partial class ReadRealmContext : DbContext
             entity.Property(e => e.UserId)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.NoteVisibilityId).HasDefaultValue((byte)1);
             entity.Property(e => e.Text)
                 .IsRequired()
                 .HasMaxLength(1000)
@@ -218,6 +221,11 @@ public partial class ReadRealmContext : DbContext
             entity.HasOne(d => d.Book).WithMany(p => p.Notes)
                 .HasForeignKey(d => d.BookId)
                 .HasConstraintName("FK_Note_BookId");
+
+            entity.HasOne(d => d.NoteVisibility).WithMany(p => p.Notes)
+                .HasForeignKey(d => d.NoteVisibilityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Note_NoteVisibilityId");
 
             entity.HasOne(d => d.Type).WithMany(p => p.Notes)
                 .HasForeignKey(d => d.TypeId)
@@ -234,6 +242,17 @@ public partial class ReadRealmContext : DbContext
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<NoteVisibility>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_NoteVisibility_Id");
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(20)
                 .IsUnicode(false);
         });
 

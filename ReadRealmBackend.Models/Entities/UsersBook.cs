@@ -1,6 +1,4 @@
-﻿using ReadRealmBackend.Models.Entities;
-
-namespace ReadRealmBackend.Models.Responses.Books
+﻿namespace ReadRealmBackend.Models.Entities
 {
     public class UsersBook
     {

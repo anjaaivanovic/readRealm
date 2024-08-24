@@ -22,6 +22,7 @@ using ReadRealmBackend.DAL.Genres;
 using ReadRealmBackend.DAL.Languages;
 using ReadRealmBackend.DAL.Notes;
 using ReadRealmBackend.DAL.NoteTypes;
+using ReadRealmBackend.DAL.NoteVisibilities;
 using ReadRealmBackend.DAL.Statuses;
 using ReadRealmBackend.Models.Context;
 
@@ -52,6 +53,7 @@ namespace ReadRealmBackend.Common
             services.AddScoped<IFriendDAL, FriendDAL>();
             services.AddScoped<IFriendRequestDAL, FriendRequestDAL>();
             services.AddScoped<INoteDAL, NoteDAL>();
+            services.AddScoped<INoteVisibilityDAL, NoteVisibilityDAL>();
         }
 
         public void InitializeBL(IServiceCollection services)

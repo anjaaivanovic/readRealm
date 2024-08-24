@@ -35,9 +35,9 @@ namespace ReadRealmBackend.BL.Books
 
         #region Get
 
-        public async Task<GenericResponse<BookResponse?>> GetBookAsync(int id)
+        public async Task<GenericResponse<BookResponse?>> GetBookAsync(int id, string userId)
         {
-            var book = await _bookDAL.GetBookAsync(id);
+            var book = await _bookDAL.GetBookAsync(id, userId);
 
             if (book == null)
             {
@@ -57,11 +57,24 @@ namespace ReadRealmBackend.BL.Books
             };
         }
 
-        public async Task<GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>> GetBooksAsync(BookPaginationRequest req)
+        public async Task<GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>> GetBooksAsync(BookPaginationRequest req, string userId)
         {
+            req.Mutual = false;
+
             return new GenericResponse<GenericPaginationResponse<RecommendedBookResponse>>
             {
-                Data = _mapper.Map<GenericPaginationResponse<RecommendedBookResponse>>(await _bookDAL.GetBooksAsync(req)),
+                Data = _mapper.Map<GenericPaginationResponse<RecommendedBookResponse>>(await _bookDAL.GetBooksAsync(req, userId)),
+                Success = true
+            };
+        }
+
+        public async Task<GenericResponse<GenericPaginationResponse<MutualBookResponse>>> GetMutualBooksAsync(BookPaginationRequest req, string userId)
+        {
+            req.Mutual = true;
+
+            return new GenericResponse<GenericPaginationResponse<MutualBookResponse>>
+            {
+                Data = _mapper.Map<GenericPaginationResponse<MutualBookResponse>>(await _bookDAL.GetBooksAsync(req, userId)),
                 Success = true
             };
         }
