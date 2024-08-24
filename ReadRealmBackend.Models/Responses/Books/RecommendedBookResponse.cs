@@ -7,5 +7,6 @@
         public string BriefDescription { get; set; }
         public string ISBN { get; set; }
         public List<string> Genres { get; set; }
+        public List<string> Authors { get; set; }
     }
 }

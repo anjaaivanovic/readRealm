@@ -98,29 +98,34 @@ namespace ReadRealmBackend.DAL.Books
              .SelectMany(b => b.Genres.Select(g => g.Id))
              .ToListAsync();
 
-            foreach (var user in usersGenres)
-            {
-                Console.WriteLine(user);
-            }
             var usersBooks = await _context.BookUsers
-               .Where(bu => bu.UserId == userId)
-               .Select(bu => bu.BookId)
-               .ToListAsync();
+                .Where(bu => bu.UserId == userId)
+                .Select(bu => bu.BookId)
+                .ToListAsync();
+
+            List<Book> books = [];
 
             if (usersGenres.Any())
             {
-                return await _set
-                  .Where(b => b.Genres.Any(g => usersGenres.Contains(g.Id)) && !usersBooks.Contains(b.Id))
-                  .Take(recommendationCount)
-                  .ToListAsync();
+                books = await _set
+                    .Include(b => b.Authors)
+                    .Include(b => b.Genres)
+                    .Where(b => b.Genres.Any(g => usersGenres.Contains(g.Id)) && !usersBooks.Contains(b.Id))
+                    .Take(recommendationCount)
+                    .ToListAsync();
             }
-            else
+           
+            if (!books.Any())
             {
-                return await _set
-                .OrderBy(b => Guid.NewGuid())
-                .Take(recommendationCount)
-                .ToListAsync();
+                books = await _set
+                    .Include(b => b.Authors)
+                    .Include(b => b.Genres)
+                    .OrderBy(b => Guid.NewGuid())
+                    .Take(recommendationCount)
+                    .ToListAsync();
             }
+
+            return books;
         }
 
         public async Task<List<Book>> GetRecommendedBooksByFriendsActivityAsync(string userId)
@@ -153,7 +158,7 @@ namespace ReadRealmBackend.DAL.Books
 
         public async Task<GenericPaginationResponse<Book>> GetBooksAsync(BookPaginationRequest req, string userId)
         {
-            var query = _set.Include(b => b.Genres).AsQueryable();
+            var query = _set.Include(b => b.Genres).Include(b => b.Authors).AsQueryable();
 
             #region Filter
 

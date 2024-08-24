@@ -48,6 +48,7 @@ namespace ReadRealmBackend.Common
 
             CreateMap<Book, RecommendedBookResponse>()
                  .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres.Select(g => g.Name).ToList()))
+                 .ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.Select(a => a.FirstName + " " + a.LastName).ToList()))
                  .ReverseMap();
             CreateMap<GenericPaginationResponse<Book>, GenericPaginationResponse<RecommendedBookResponse>>().ReverseMap();
 
@@ -79,8 +80,8 @@ namespace ReadRealmBackend.Common
             #region Note
 
             CreateMap<Note, NoteResponse>()
-                .ForMember(dest => dest.Visibility, opt => opt.MapFrom(src => src.NoteVisibility.Name))
-                .ReverseMap();
+              .ForMember(dest => dest.Visibility, opt => opt.MapFrom(src => src.NoteVisibility.Name))
+              .ReverseMap();
             CreateMap<GenericPaginationResponse<Note>, GenericPaginationResponse<NoteResponse>>().ReverseMap();
             CreateMap<InsertNoteRequest, InsertNoteFullRequest>().ReverseMap();
             CreateMap<Note, InsertNoteFullRequest>()
@@ -147,7 +148,7 @@ namespace ReadRealmBackend.Common
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => DateOnly.FromDateTime(src.StartDate)))
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate.HasValue ? DateOnly.FromDateTime(src.EndDate.Value) : (DateOnly?)null));
             CreateMap<InsertBookUserRequest, InsertBookUserFullRequest>().ReverseMap();
-            
+
             #endregion
 
             #region Friend
